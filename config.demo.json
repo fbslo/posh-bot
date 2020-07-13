@@ -1,0 +1,9 @@
+{
+  "account_name": "demo",
+  "posting_key": "5ksomeprivatekey",
+  "database_ip": "localhost",
+  "database_user": "root",
+  "database_password": "database_password",
+  "database_port": 3306,
+  "database": "posh"
+}
