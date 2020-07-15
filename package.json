@@ -1,0 +1,34 @@
+{
+  "name": "posh-bot",
+  "version": "1.0.0",
+  "description": "POSH bot",
+  "main": "index.js",
+  "dependencies": {
+    "@hiveio/hive-js": "^0.8.2",
+    "get-urls": "^9.2.1",
+    "lodash": "^4.17.19",
+    "mysql": "^2.18.1",
+    "request": "^2.88.2",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fbslo/posh-bot.git"
+  },
+  "keywords": [
+    "post",
+    "hive",
+    "twitter"
+  ],
+  "author": "fbslo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fbslo/posh-bot/issues"
+  },
+  "homepage": "https://github.com/fbslo/posh-bot#readme"
+}

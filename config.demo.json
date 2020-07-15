@@ -5,5 +5,8 @@
   "database_user": "root",
   "database_password": "database_password",
   "database_port": 3306,
-  "database": "posh"
+  "database": "posh",
+  "consumer_key": "get_this-from-twitter",
+  "consumer_secret": "get_this-from-twitter",
+  "bearer_token": "get_this-from-twitter"
 }
