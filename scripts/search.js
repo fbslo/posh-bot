@@ -24,15 +24,20 @@ function start(){
        }
      }
      //removePossibleDuplicates(array)
-     checkIfTweetIncludesLink(array[0], array, 0)
+     forAllTweets(array)
   });
+}
+
+function forAllTweets(array){
+  for (i in array){
+    checkIfTweetIncludesLink(array[i], array, i)
+  }
 }
 
 async function checkIfTweetIncludesLink(data, array, i){
   let links = Array.from(getUrls(data.text));
   let location = []
   let isValidLink = []
-  console.log('gere')
   for (i in links){
     request({url: links[i], followRedirect: false}, function(error, response, body) {
       if (response.statusCode >= 300 && response.statusCode < 400) {
@@ -42,16 +47,13 @@ async function checkIfTweetIncludesLink(data, array, i){
             for(l in frontends){
               if(location[i].includes(frontends[l])){
                 isValidLink.push(location[i])
-                console.log('frontend')
               }
             }
           }
           if(isValidLink.length > 0){
-            console.log('isvalid')
             saveDataToDatabase(array[i], array, i)
           } else {
-            i++
-            checkIfTweetIncludesLink(array[i], array, i)
+            console.log('Does not include link!')
           }
         }
       }
@@ -88,13 +90,19 @@ async function checkIfTweetIncludesLink(data, array, i){
 // }
 
 function saveDataToDatabase(data, array, i){
-  let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name]]
-  con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name) VALUES ?", [values], (err, result) => {
+  con.query("SELECT * FROM users  WHERE twitter = ?", [data.user.screen_name], (err_users, result_users) => {
     if(err) console.log("Error with database: Error: "+err)
     else {
-      i++
-      if(i <= array.length -1){
-        checkIfTweetIncludesLink(array[i], array, i)
+      if(result_users.length == 0){
+        console.log(`User ${data.user.screen_name} did not register any Hive account!`)
+      } else {
+        let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name, result_users[0].hive]]
+        con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name, hive_username) VALUES ?", [values], (err, result) => {
+          if(err) console.log("Error with database: Error: "+err)
+          else {
+            console.log("Tweet stored!")
+          }
+        })
       }
     }
   })

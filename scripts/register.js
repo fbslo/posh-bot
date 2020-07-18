@@ -65,7 +65,7 @@ function completeRegistration(twitter, data){
     if(err) console.log(err)
     else {
       if (result.length == 0){
-        let values = [[data.author, twitter, new Date().getTime(), new Date()]]
+        let values = [[data.author, twitter.toLowercase(), new Date().getTime(), new Date()]]
         con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err, result) => {
           if(err) console.log(err)
           else{
