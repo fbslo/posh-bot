@@ -48,7 +48,7 @@ function isAlreadyRegistred(data){
 function checkTwitterData(data){
   let tweet = data.body.split(" ")
   let id = tweet[1].split("/")[5]
-  let twitter_account = tweet[1].split("/")[3]
+  let twitter_account = tweet[1].split("/")[3].toLowerCase()
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
      if(tweets.text.includes("register-hive-account")){
@@ -65,7 +65,7 @@ function completeRegistration(twitter, data){
     if(err) console.log(err)
     else {
       if (result.length == 0){
-        let values = [[data.author, twitter.toLowercase(), new Date().getTime(), new Date()]]
+        let values = [[data.author, twitter, new Date().getTime(), new Date()]]
         con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err, result) => {
           if(err) console.log(err)
           else{
