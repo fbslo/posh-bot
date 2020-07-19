@@ -51,7 +51,8 @@ async function checkIfTweetIncludesLink(data, array, i){
             }
           }
           if(isValidLink.length > 0){
-            saveDataToDatabase(array[i], array, i)
+            let link = isValidLink[0]
+            saveDataToDatabase(array[i], array, i, link)
           } else {
             console.log('Does not include link!')
           }
@@ -89,15 +90,15 @@ async function checkIfTweetIncludesLink(data, array, i){
 //   })
 // }
 
-function saveDataToDatabase(data, array, i){
+function saveDataToDatabase(data, array, i, link){
   con.query("SELECT * FROM users  WHERE twitter = ?", [data.user.screen_name], (err_users, result_users) => {
-    if(err) console.log("Error with database: Error: "+err)
+    if(err_users) console.log("Error with database: Error: "+err_users)
     else {
       if(result_users.length == 0){
         console.log(`User ${data.user.screen_name} did not register any Hive account!`)
       } else {
-        let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name, result_users[0].hive]]
-        con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name, hive_username) VALUES ?", [values], (err, result) => {
+        let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name, result_users[0].hive, link]]
+        con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name, hive_username, hive_link) VALUES ?", [values], (err, result) => {
           if(err) console.log("Error with database: Error: "+err)
           else {
             console.log("Tweet stored!")
