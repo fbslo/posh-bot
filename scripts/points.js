@@ -59,7 +59,7 @@ async function getPostEngagement(author, permlink, data){
     if(err) console.log(`Error getting post ${author}/${permlink}! Error: ${err}`)
     else {
       let holders = []
-      function checkHolders(result, i){
+      async function checkHolders(result, i){
         let isHolder = await isEngageHolder(result[i].author)
         if(isHolder == true){
           holders.push(result[i].author)

@@ -17,6 +17,7 @@ function start(){
   client.get('search/tweets', {q: '#posh'}, function(error, tweets, response) {
     let array = []
      for (i in tweets.statuses){
+       console.log(tweets.statuses[i].user.screen_name)
        if(!tweets.statuses[i].retweeted_status){
          if(new Date().getTime() - new Date(tweets.statuses[i].created_at).getTime() < 21600000){ // 6 hours
            array.push(tweets.statuses[i])
@@ -38,15 +39,15 @@ async function checkIfTweetIncludesLink(data, array, i){
   let links = Array.from(getUrls(data.text));
   let location = []
   let isValidLink = []
-  for (i in links){
-    request({url: links[i], followRedirect: false}, function(error, response, body) {
+  for (l in links){
+    request({url: links[l], followRedirect: false}, function(error, response, body) {
       if (response.statusCode >= 300 && response.statusCode < 400) {
         location.push(response.headers.location);
         if(location.length == links.length){
-          for(i in location){
-            for(l in frontends){
-              if(location[i].includes(frontends[l])){
-                isValidLink.push(location[i])
+          for(b in location){
+            for(k in frontends){
+              if(location[b].includes(frontends[k])){
+                isValidLink.push(location[b])
               }
             }
           }
@@ -104,7 +105,7 @@ function saveDataToDatabase(data, array, i, link){
             console.log("Tweet stored!")
           }
         })
-      }
+       }
     }
   })
 }
