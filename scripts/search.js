@@ -13,7 +13,7 @@ var client = new Twitter({
   bearer_token: config.bearer_token
 });
 
-function start(){
+function start(){ //REST API is returning only limited amount of results!
   client.get('search/tweets', {q: '#posh'}, function(error, tweets, response) {
     let array = []
      for (i in tweets.statuses){

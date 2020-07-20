@@ -4,7 +4,7 @@ const config = require("./config.json")
 const register = require("./scripts/register.js")
 const search = require("./scripts/search.js")
 const score = require("./scripts/score.js")
-const points = require("./scripts/points.js")
+const tokens = require("./scripts/tokens.js")
 const daily = require("./scripts/daily_post.js")
 
 // setInterval(() => {
@@ -20,11 +20,9 @@ const daily = require("./scripts/daily_post.js")
 // }, 1000 * 60 * 60 * 24) //every 1 day
 //
 // setInterval(() => {
-//   points.give()
+//   tokens.give()
 // }, 1000 * 60 * 60 * 24) //every 30 minutes
 //
 // setInterval(() => {
 //   daily.post()
 // }, 1000 * 60 * 60 * 24) //every 1 day
-
-search.start()

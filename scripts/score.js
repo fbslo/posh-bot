@@ -2,6 +2,8 @@ const con = require('../database.js')
 const config = require("../config.json")
 var Twitter = require('twitter');
 
+var hive = require("./hive_engagement.js")
+
 var client = new Twitter({
   consumer_key: config.consumer_key,
   consumer_secret: config.consumer_secret,
@@ -20,11 +22,13 @@ function calculate(){
 }
 
 function getTweetEngagement(data, array, i){
-  client.get('statuses/show/'+data.id, function(error, tweets, response) {
+  client.get('statuses/show/'+data.id, async function(error, tweets, response) {
     if (error) console.log("Error getting Tweet data! Error: "+error)
     else {
       var score = (tweets.retweet_count * 5) + tweets.favorite_count
-      saveDataToDatabase(Number(score), data, array, i)
+      hive.getHiveScore(data, (hive_score) => {
+        saveDataToDatabase(Number(score + hive_score), data, array, i)
+      })
     }
   })
 }
