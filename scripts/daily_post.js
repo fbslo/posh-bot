@@ -14,7 +14,6 @@ function post(){
 }
 
 async function submitHivePost(data){
-  console.log(data)
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -40,9 +39,9 @@ async function submitHivePost(data){
 }
 
 function prepareBody(data){
-  let body = ''
+  let body = 'Total number of tokens distributed today: 1,000\n\n'
   for (i in data){
-    body += `User @${data[i].hive_username} posted as @${data[i].user_name} on Twitter and received ${data[i].points} points for [Tweet](https://twitter.com/${data[i].user_name}/${data[i].id}) <br>`
+    body += `Hive user @${data[i].hive_username} posted as [@${data[i].user_name}](https://twitter.com/${data[i].user_name}) on Twitter and received ${data[i].points} tokens for this [Tweet](https://twitter.com/${data[i].user_name}/status/${data[i].id}) <br>`
     updatePost(data[i].id)
   }
   return body;

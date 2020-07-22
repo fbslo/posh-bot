@@ -73,7 +73,6 @@ function includesLink(urls, callback){
       if(error) console.log("Error fetching url: "+error)
       else {
         if (response.statusCode >= 300 && response.statusCode < 400) {
-          console.log(response.headers.location, urls[i])
           if(response.headers.location.includes("peakd") || response.headers.location.includes("hive.blog") || response.headers.location.includes("3speak.online")){
             isValidLink.push(response.headers.location)
           }
@@ -146,6 +145,15 @@ function saveDataToDatabase(data, array, link){
     else {
       if(result_users.length == 0){
         console.log(`User ${data.user.screen_name} did not register any Hive account!`)
+        //remove after launch
+        let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name, 'null', link]]
+        con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name, hive_username, hive_link) VALUES ?", [values], (err, result) => {
+          if(err) console.log("Error with database: Error: "+err)
+          else {
+            console.log("Tweet stored!")
+          }
+        })
+        //end
       } else {
         let values = [[data.id_str, new Date(data.created_at).getTime(), data.user.id, data.user.screen_name, result_users[0].hive, link]]
         con.query("INSERT INTO twitter_posts (id, created_at, user_id, user_name, hive_username, hive_link) VALUES ?", [values], (err, result) => {

@@ -2,18 +2,25 @@ const got = require('got')
 const hive = require('@hiveio/hive-js')
 
 async function getHiveScore(data, callback){
-  if(data.hive_post.includes("3speak.online")){
-    if(data.hive_post.split("=")[1].split("/")[0] == data.hive_username){
-      getPostEngagement(data.hive_username, data.hive_post.split("@")[1].split("/")[1], data, (holders) => {
+  if(data.hive_link.includes("3speak.online")){
+    if(data.hive_link.split("=")[1].split("/")[0] == data.hive_username){
+      getPostEngagement(data.hive_username, data.hive_link.split("@")[1].split("/")[1], data, (holders) => {
         callback(holders.length * 5)
       })
+    } else {
+      callback(0)
+    }
+  } else if(data.hive_link.includes('hive.blog') || data.hive_link.includes('peakd')){
+    if(data.hive_link.split("@")[1].split("/")[0] == data.hive_username){
+      getPostEngagement(data.hive_username, data.hive_link.split("@")[1].split("/")[1], data, (holders) => {
+        callback(holders.length * 5)
+      })
+    } else {
+      callback(0)
+
     }
   } else {
-    if(data.hive_post.split("@")[1].split("/")[0] == data.hive_username){
-      getPostEngagement(data.hive_username, data.hive_post.split("@")[1].split("/")[1], data, (holders) => {
-        callback(holders.length * 5)
-      })
-    }
+    callback(0)
   }
 }
 
