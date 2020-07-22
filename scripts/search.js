@@ -5,62 +5,111 @@ const _ = require("lodash")
 var request = require("request");
 const getUrls = require('get-urls');
 
-let frontends = ['hive.blog', 'peakd.com', '3speak.online']
-
 var client = new Twitter({
   consumer_key: config.consumer_key,
   consumer_secret: config.consumer_secret,
   bearer_token: config.bearer_token
 });
 
+
+
 function start(){ //REST API is returning only limited amount of results!
-  client.get('search/tweets', {q: '#posh'}, function(error, tweets, response) {
-    let array = []
-     for (i in tweets.statuses){
-       console.log(tweets.statuses[i].user.screen_name)
-       if(!tweets.statuses[i].retweeted_status){
-         if(new Date().getTime() - new Date(tweets.statuses[i].created_at).getTime() < 21600000){ // 6 hours
-           array.push(tweets.statuses[i])
-         }
+  client.get('search/tweets', {q: '#posh', count: 1000, tweet_mode: 'extended'}, function(error, tweets, response) {
+    if(error) console.log("Error getting Tweets from API: "+ error)
+    else {
+      let array = []
+       for (i in tweets.statuses){
+        if(!tweets.statuses[i].retweeted_status){
+          if(new Date().getTime() - new Date(tweets.statuses[i].created_at).getTime() < 21600000){ // 6 hours
+             array.push(tweets.statuses[i])
+          }
+        }
        }
-     }
-     //removePossibleDuplicates(array)
-     forAllTweets(array)
+       //removePossibleDuplicates(array)
+       forAllTweets(array, 0)
+    }
   });
 }
 
-function forAllTweets(array){
-  for (i in array){
-    checkIfTweetIncludesLink(array[i], array, i)
+function forAllTweets(array, i){
+  checkIfTweetIncludesLink(array[i], array, (result, link) => {
+    if(result == true){
+      saveDataToDatabase(array[i], array, link)
+      i++
+      if(i < array.length-1){
+        forAllTweets(array, i)
+      }
+    } else {
+      console.log(`Tweet ${array[i].user.screen_name}/status/${array[i].id_str} does not include any Hive link!`)
+      i++
+      if(i < array.length-1){
+        forAllTweets(array, i)
+      }
+    }
+  })
+}
+
+async function checkIfTweetIncludesLink(data, array, callback){
+  let urls = Array.from(getUrls(data.full_text));
+  if(urls.length > 0){
+    includesLink(urls, (isLink, link) => {
+      if(isLink == true){
+        callback(true, link)
+      } else {
+        callback(false, null)
+      }
+    })
+  } else {
+    callback(false, null)
   }
 }
 
-async function checkIfTweetIncludesLink(data, array, i){
-  let links = Array.from(getUrls(data.text));
-  let location = []
+function includesLink(urls, callback){
+  var i = 0
   let isValidLink = []
-  for (l in links){
-    request({url: links[l], followRedirect: false}, function(error, response, body) {
-      if (response.statusCode >= 300 && response.statusCode < 400) {
-        location.push(response.headers.location);
-        if(location.length == links.length){
-          for(b in location){
-            for(k in frontends){
-              if(location[b].includes(frontends[k])){
-                isValidLink.push(location[b])
-              }
-            }
+  searchLink(urls, i)
+  function searchLink(urls, i){
+    request({url: urls[i], followRedirect: false}, function(error, response, body) {
+      if(error) console.log("Error fetching url: "+error)
+      else {
+        if (response.statusCode >= 300 && response.statusCode < 400) {
+          console.log(response.headers.location, urls[i])
+          if(response.headers.location.includes("peakd") || response.headers.location.includes("hive.blog") || response.headers.location.includes("3speak.online")){
+            isValidLink.push(response.headers.location)
           }
-          if(isValidLink.length > 0){
-            let link = isValidLink[0]
-            saveDataToDatabase(array[i], array, i, link)
+          if(i < urls.length-1){
+            if(isValidLink.length > 0) callback(true, isValidLink[0])
+            else {
+              i++
+              searchLink(urls, i)
+            }
           } else {
-            console.log('Does not include link!')
+            if(isValidLink.length > 0) callback(true, isValidLink[0])
+            else callback(false, null)
+          }
+        } else  {
+          if(i <= urls.length-1){
+            i++
+            searchLink(urls, i)
+          } else {
+            if(isValidLink.length > 0) callback(true, isValidLink[0])
+            else callback(false, null)
           }
         }
       }
-    });
+    })
   }
+
+    //
+    // if(i == links.length){
+    //   if(isValidLink.length > 0){
+    //     let link = isValidLink[0]
+    //     console.log(`${data.user.screen_name}/${data.id_str} include link!`)
+    //     callback(true)
+    //   } else {
+    //     console.log(`Does from ${data.user.screen_name}/status/${data.id_str} not include link!`)
+    //   }
+    // }
 }
 
 // function removePossibleDuplicates(array){
@@ -91,7 +140,7 @@ async function checkIfTweetIncludesLink(data, array, i){
 //   })
 // }
 
-function saveDataToDatabase(data, array, i, link){
+function saveDataToDatabase(data, array, link){
   con.query("SELECT * FROM users  WHERE twitter = ?", [data.user.screen_name], (err_users, result_users) => {
     if(err_users) console.log("Error with database: Error: "+err_users)
     else {
