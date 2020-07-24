@@ -17,11 +17,11 @@ setInterval(() => {
 
 setInterval(() => {
   score.calculate()
-}, 1000 * 60 * 60 * 24) //every 1 day
+}, 1000 * 60 * 30) //every 30 minutes
 
 setInterval(() => {
   tokens.give()
-}, 1000 * 60 * 60 * 24) //every 30 minutes
+}, 1000 * 60 * 60 * 24) //every 1 day
 
 setInterval(() => {
   daily.post()
