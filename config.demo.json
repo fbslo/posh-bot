@@ -8,5 +8,7 @@
   "database": "posh",
   "consumer_key": "get_this-from-twitter",
   "consumer_secret": "get_this-from-twitter",
-  "bearer_token": "get_this-from-twitter"
+  "bearer_token": "get_this-from-twitter",
+  "access_token_key": "get_this-from-twitter",
+  "access_token_secret": "get_this-from-twitter"
 }
