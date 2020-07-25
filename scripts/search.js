@@ -8,49 +8,38 @@ const getUrls = require('get-urls');
 var client = new Twitter({
   consumer_key: config.consumer_key,
   consumer_secret: config.consumer_secret,
-  bearer_token: config.bearer_token
+  access_token_key: config.access_token_key,
+  access_token_secret: config.access_token_secret
 });
 
 
 
 function start(){ //REST API is returning only limited amount of results!
-  client.get('search/tweets', {q: '#posh', count: 1000, tweet_mode: 'extended'}, function(error, tweets, response) {
-    if(error) console.log("Error getting Tweets from API: "+ error)
-    else {
-      let array = []
-       for (i in tweets.statuses){
-        if(!tweets.statuses[i].retweeted_status){
-          if(new Date().getTime() - new Date(tweets.statuses[i].created_at).getTime() < 21600000){ // 6 hours
-             array.push(tweets.statuses[i])
-          }
-        }
-       }
-       //removePossibleDuplicates(array)
-       forAllTweets(array, 0)
+  var stream = client.stream('statuses/filter', {track: '#posh', tweet_mode: 'extended'});
+  stream.on('data', function(event) {
+    if(new Date().getTime() - new Date(event.created_at).getTime() < 21600000){ // 6 hours
+      forAllTweets(event)
     }
+  });
+
+  stream.on('error', function(error) {
+    console.log("Error getting Tweets from API: "+ error)
+    throw error;
   });
 }
 
-function forAllTweets(array, i){
-  checkIfTweetIncludesLink(array[i], array, (result, link) => {
+function forAllTweets(data){
+  checkIfTweetIncludesLink(data, (result, link) => {
     if(result == true){
-      saveDataToDatabase(array[i], array, link)
-      i++
-      if(i < array.length-1){
-        forAllTweets(array, i)
-      }
+      saveDataToDatabase(data, link)
     } else {
-      console.log(`Tweet ${array[i].user.screen_name}/status/${array[i].id_str} does not include any Hive link!`)
-      i++
-      if(i < array.length-1){
-        forAllTweets(array, i)
-      }
+      console.log(`Tweet ${data.user.screen_name}/status/${data.id_str} does not include any Hive link!`)
     }
   })
 }
 
-async function checkIfTweetIncludesLink(data, array, callback){
-  let urls = Array.from(getUrls(data.full_text));
+async function checkIfTweetIncludesLink(data, callback){
+  let urls = Array.from(getUrls(data.text));
   if(urls.length > 0){
     includesLink(urls, (isLink, link) => {
       if(isLink == true){
@@ -139,7 +128,7 @@ function includesLink(urls, callback){
 //   })
 // }
 
-function saveDataToDatabase(data, array, link){
+function saveDataToDatabase(data, link){
   con.query("SELECT * FROM users  WHERE twitter = ?", [data.user.screen_name], (err_users, result_users) => {
     if(err_users) console.log("Error with database: Error: "+err_users)
     else {
