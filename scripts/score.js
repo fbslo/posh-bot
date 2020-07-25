@@ -11,7 +11,7 @@ var client = new Twitter({
 });
 
 function calculate(){
-  let one_day = new Date().getTime() - 86400000
+  let one_day = new Date().getTime()// - 86400000
   con.query(`SELECT * FROM twitter_posts WHERE score IS NULL AND score_time IS NULL AND created_at <= ${one_day}`, (err, result) => {
     if(err) console.log("Error with database: Error: "+err)
     else {

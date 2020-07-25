@@ -4,8 +4,8 @@ const hive = require('@hiveio/hive-js')
 
 
 function post(){
-  let one_day = new Date().getTime() - 86400000
-  con.query(`SELECT * FROM twitter_posts WHERE points_time <= ${one_day} AND posted IS NULL;`, (err, result) => {
+  //let one_day = new Date().getTime() - 86400000
+  con.query(`SELECT * FROM twitter_posts WHERE points_time IS NOT NULL AND posted IS NULL;`, (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database: Error: "+err)
     else {
       submitHivePost(result)
