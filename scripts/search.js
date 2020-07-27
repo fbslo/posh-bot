@@ -17,7 +17,9 @@ var client = new Twitter({
 function start(){ //REST search API is returning only limited amount of results, so I used streaming API!
   var stream = client.stream('statuses/filter', {track: '#posh', tweet_mode: 'extended'});
   stream.on('data', function(event) {
-    forAllTweets(event)
+    if(!event.retweeted_status){
+      forAllTweets(event)
+    }
   });
 
   stream.on('error', function(error) {
@@ -29,6 +31,7 @@ function start(){ //REST search API is returning only limited amount of results,
 }
 
 function forAllTweets(data){
+  console.log(data)
   checkIfTweetIncludesLink(data, (result, link) => {
     if(result == true){
       saveDataToDatabase(data, link)
@@ -39,7 +42,7 @@ function forAllTweets(data){
 }
 
 async function checkIfTweetIncludesLink(data, callback){
-  let urls = Array.from(getUrls(data.text));
+  let urls = Array.from(getUrls(data.extended_tweet.full_text));
   if(urls.length > 0){
     includesLink(urls, (isLink, link) => {
       if(isLink == true){
