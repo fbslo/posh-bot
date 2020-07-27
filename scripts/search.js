@@ -31,7 +31,6 @@ function start(){ //REST search API is returning only limited amount of results,
 }
 
 function forAllTweets(data){
-  console.log(data)
   checkIfTweetIncludesLink(data, (result, link) => {
     if(result == true){
       saveDataToDatabase(data, link)
