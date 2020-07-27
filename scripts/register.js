@@ -12,7 +12,7 @@ var client = new Twitter({
 //register https://twitter.com/GPujs/status/1279072304299937793
 
 async function new_registrations(){
-  hive.api.getContentReplies('posh-bot', 'register-your-twitter-account', function(err, result) {
+  hive.api.getContentReplies('poshtoken', 'register-your-twitter-account', function(err, result) {
     if(err) console.log("Error getting new registrations! Error: "+err)
     else {
       for (i in result){
