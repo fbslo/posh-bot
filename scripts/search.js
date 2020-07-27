@@ -14,17 +14,17 @@ var client = new Twitter({
 
 
 
-function start(){ //REST API is returning only limited amount of results!
+function start(){ //REST search API is returning only limited amount of results, so I used streaming API!
   var stream = client.stream('statuses/filter', {track: '#posh', tweet_mode: 'extended'});
   stream.on('data', function(event) {
-    if(new Date().getTime() - new Date(event.created_at).getTime() < 21600000){ // 6 hours
-      forAllTweets(event)
-    }
+    forAllTweets(event)
   });
 
   stream.on('error', function(error) {
     console.log("Error getting Tweets from API: "+ error)
-    throw error;
+    setTimeout(() => {
+      start()
+    }, 5000)
   });
 }
 

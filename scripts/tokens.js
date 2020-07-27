@@ -11,7 +11,7 @@ var client = new Twitter({
 let points  = 1000
 
 function give(){
-  let one_day = new Date().getTime() //- 86400000
+  let one_day = new Date().getTime() - 86400000
   con.query(`SELECT * FROM twitter_posts WHERE points IS NULL AND points_time IS NULL AND score_time <= ${one_day};`, (err, result) => {
     if(err) console.log("Error with database: Error: "+err)
     else {
