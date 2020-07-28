@@ -16,7 +16,7 @@ async function new_registrations(){
     if(err) console.log("Error getting new registrations! Error: "+err)
     else {
       for (i in result){
-        if(result[i].body.split(" ")[0] == "register" && result[i].body.split(" ")[1].includes("https://twitter.com")){
+        if(result[i].body.split(" ")[0].toLowerCase() == "register" && result[i].body.split(" ")[1].includes("twitter.com")){
           isAlreadyRegistred(result[i])
         }
       }
@@ -48,7 +48,7 @@ function isAlreadyRegistred(data){
 function checkTwitterData(data){
   let tweet = data.body.split(" ")
   let id = tweet[1].split("/")[5].split("?")[0]
-  let twitter_account = tweet[1].split("/")[3].toLowerCase()
+  let twitter_account = tweet.substring(22)//[1].split("/")[3].toLowerCase()
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
      else if(tweets.text){
