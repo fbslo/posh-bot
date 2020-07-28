@@ -37,6 +37,7 @@ MySQL tables:
 Database: `posh`
 
 ```
+Table: users
 +------------+------+------+-----+---------+-------+
 | Field      | Type | Null | Key | Default | Extra |
 +------------+------+------+-----+---------+-------+
@@ -45,9 +46,8 @@ Database: `posh`
 | time       | text | YES  |     | NULL    |       |
 | human_time | text | YES  |     | NULL    |       |
 +------------+------+------+-----+---------+-------+
-```
 
-```
+Table: twitter_posts
 +---------------+--------------+------+-----+---------+-------+
 | Field         | Type         | Null | Key | Default | Extra |
 +---------------+--------------+------+-----+---------+-------+
@@ -63,4 +63,13 @@ Database: `posh`
 | posted        | text         | YES  |     | NULL    |       |
 | hive_link     | text         | YES  |     | NULL    |       |
 +---------------+--------------+------+-----+---------+-------+
+
+Table: registration
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| hive       | text | YES  |     | NULL    |       |
+| token      | int  | YES  |     | NULL    |       |
+| used       | bool | YES  |     | NULL    |       |
++------------+------+------+-----+---------+-------+
 ```

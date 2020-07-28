@@ -1,6 +1,7 @@
 {
   "account_name": "demo",
   "posting_key": "5ksomeprivatekey",
+  "active_key": "5k",
   "database_ip": "localhost",
   "database_user": "root",
   "database_password": "database_password",

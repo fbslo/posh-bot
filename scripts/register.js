@@ -48,7 +48,7 @@ function isAlreadyRegistred(data){
 function checkTwitterData(data){
   let tweet = data.body.split(" ")
   let id = tweet[1].split("/")[5].split("?")[0]
-  let twitter_account = tweet.substring(22)//[1].split("/")[3].toLowerCase()
+  let twitter_account = tweet[1].split("/")[3].toLowerCase()
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
      else if(tweets.text){
@@ -90,7 +90,9 @@ async function replyToComment(message, data, twitter){
           author: 'fbslo'
         })
   hive.broadcast.comment(config.posting_key, data.author, data.permlink, config.account_name, permlink, '', message, jsonMetadata, function(err, result) {
-    if(err) console.log('Error posting comment! Error: '+err)
+    if(err){
+      console.log('Error posting comment! Error: '+err)
+    }
     else {
       console.log("Reply to coment was posted!")
     }
