@@ -10,9 +10,9 @@ const tokens = require("./scripts/tokens.js")
 const daily = require("./scripts/daily_post.js")
 
 
-// setInterval(() => {
-//   register.new_registrations()
-// }, 1000 * 60) //every minute
+setInterval(() => {
+  register.new_registrations()
+}, 1000 * 60) //every minute
 
 setInterval(() => {
   score.calculate()
@@ -26,6 +26,6 @@ setInterval(() => {
   daily.post()
 }, 1000 * 60 * 60 * 24) //every 1 day
 
-//search.start()
+search.start()
 register_transfer.scan()
 search_register_tweets.start()
