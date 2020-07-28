@@ -47,7 +47,7 @@ function isAlreadyRegistred(data){
 
 function checkTwitterData(data){
   let tweet = data.body.split(" ")
-  let id = tweet[1].split("/")[5]
+  let id = tweet[1].split("/")[5].split("?")[0]
   let twitter_account = tweet[1].split("/")[3].toLowerCase()
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
