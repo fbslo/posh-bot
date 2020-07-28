@@ -69,13 +69,13 @@ function completeRegistration(twitter, data){
         con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err, result) => {
           if(err) console.log(err)
           else{
-            console.log(`Hive user ${data.author} with Twitter username ${twitter} is now registred.`)
+            console.log(`Hive user ${data.author} with Twitter username ${twitter} is now registered.`)
             replyToComment(`Twitter account ${twitter} was registered to Hive account ${data.author}!`, data, twitter)
           }
         })
       } else {
         console.log(`Hive user ${data.author} or Twitter account ${twitter} is already registerd`)
-        replyToComment(`Hive user ${data.author} or Twitter account ${twitter} is already registerd`, data, twitter)
+        replyToComment(`Hive user ${data.author} or Twitter account ${twitter} is already registered`, data, twitter)
       }
     }
   })
