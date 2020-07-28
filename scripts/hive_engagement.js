@@ -10,7 +10,7 @@ async function getHiveScore(data, callback){
     } else {
       callback(0)
     }
-  } else if(data.hive_link.includes('hive.blog') || data.hive_link.includes('peakd')){
+  } else if(data.hive_link.includes('hive.blog') || data.hive_link.includes('peakd') || data.hive_link.includes("leofinance.io")){
     if(data.hive_link.split("@")[1].split("/")[0] == data.hive_username){
       getPostEngagement(data.hive_username, data.hive_link.split("@")[1].split("/")[1], data, (holders) => {
         callback(holders.length * 5)
