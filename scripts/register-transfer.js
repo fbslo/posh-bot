@@ -2,7 +2,7 @@ const config = require('../config.json')
 const hive = require('@hiveio/hive-js')
 const con = require('../database.js')
 
-hive.config.set('alternative_api_endpoints', ["https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
+hive.config.set('alternative_api_endpoints', ["https://anyx.io", "https://api.hive.blog", "https://api.hivekings.com", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
 
 module.exports = {
   scan: async function scan(){
