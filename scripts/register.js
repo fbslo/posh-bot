@@ -51,10 +51,12 @@ function checkTwitterData(data){
   let twitter_account = tweet[1].split("/")[3].toLowerCase()
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
-     if(tweets.text.includes("register-hive-account")){
-       let tweet_split = tweets.text.split("-")
-       if(tweet_split[3] == data.author){
-         completeRegistration(twitter_account, data)
+     else if(tweets.text){
+       if(tweets.text.includes("register-hive-account")){
+         let tweet_split = tweets.text.split("-")
+         if(tweet_split[3] == data.author){
+           completeRegistration(twitter_account, data)
+         }
        }
      }
   });
@@ -74,7 +76,7 @@ function completeRegistration(twitter, data){
           }
         })
       } else {
-        console.log(`Hive user ${data.author} or Twitter account ${twitter} is already registerd`)
+        console.log(`Hive user ${data.author} or Twitter account ${twitter} is already registered`)
         replyToComment(`Hive user ${data.author} or Twitter account ${twitter} is already registered`, data, twitter)
       }
     }
