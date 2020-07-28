@@ -8,7 +8,7 @@ Created by @fbslo
 
 #### How does this bot works?
 
-Read post: hive-post-goes-here
+Read post: https://hive.blog/posh/@poshtoken/posh-bot-how-does-it-work
 
 ---
 
