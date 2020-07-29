@@ -19,7 +19,7 @@ async function replayBlocks(start_block){
     if(err){
       console.log('Error scanning blockchain: Block '+ start_block+", error: "+err)
       setTimeout(() => {
-        //replayBlocks(start_block)
+        replayBlocks(start_block)
       }, 1000)
     } else {
       if(result && result != null){
@@ -28,9 +28,53 @@ async function replayBlocks(start_block){
         for(i in result.transactions){
           let type = result.transactions[i].operations[0][0]
           let data = result.transactions[i].operations[0][1]
-          if (type == 'comment' && IsJsonString(data.json_metadata) && data.patent_permlink = 'posh-bot-how-does-it-work'){
+          if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'posh-bot-how-does-it-work'){
             if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
               isAlreadyRegistred(data)
+            }
+          } else if(type == 'transfer' && data.to == config.account_name){
+
+            processPayment(data)
+
+            function processPayment(data){
+              let id = randomInteger(0, 1000000)
+              let memo = `Please create tweet with this content: "#poshbotregistration ${id}"`
+              storeToDatabase(memo, id, data)
+            }
+
+            function storeToDatabase(memo, id, data){
+              let values = [[data.from, id, false]]
+              con.query("SELECT * FROM users WHERE hive = ?", [data.from], (err1, result1) => {
+                if(err1) console.log(`Database error: ${err1}`)
+                else {
+                  if(result1.length == 0){
+                    con.query("INSERT INTO registration (hive, id, used) VALUES ?", [values], (err, result) => {
+                      if(err) sendErrorTransfer(data, `There was error while processing your request, please try again later!`)
+                      else {
+                        hive.api.getAccounts([data.from], (err, res) => {
+                          var encoded = hive.memo.encode(config.active_key, res[0].memo_key, `#${memo}`)
+                          hive.broadcast.transfer(config.active_key, config.account_name, data.from, data.amount, encoded, function(err, result) {
+                            console.log(err, result);
+                          });
+                        });
+                      }
+                    })
+                  } else {
+                    sendErrorTransfer(data, `Your account is already registered!`)
+                  }
+                }
+              })
+            }
+
+            function sendErrorTransfer(data, memo){
+              hive.broadcast.transfer(config.active_key, config.account_name, data.from, data.amount, memo, function(err, result) {
+                if(err) console.log(`Error sending error transfer: ${err}`)
+                else console.log(`Error transfer sent to ${data.from}`)
+              });
+            }
+
+            function randomInteger(min, max) {
+              return Math.floor(Math.random() * (max - min + 1)) + min;
             }
           }
         }
