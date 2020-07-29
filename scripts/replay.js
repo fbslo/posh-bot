@@ -108,7 +108,9 @@ function isAlreadyRegistred(data){
                let tweet_split = tweets.text//.split("-")
                console.log(tweet_split.substring(22), data.author)
                if(tweet_split.substring(22) == data.author){
-                 register(data)
+                 completeRegistration(data, twitter_account)
+               } else {
+                 console.log("Username do not match")
                }
              }
            }
@@ -120,28 +122,27 @@ function isAlreadyRegistred(data){
   })
 }
 
-function register(data){
-  function completeRegistration(twitter, data){
-    con.query('SELECT * FROM users WHERE hive = ? OR twitter = ?', [data.author, twitter], (err, result) => {
-      if(err) console.log(err)
-      else {
-        if (result.length == 0){
-          let values = [[data.author, twitter, new Date().getTime(), new Date()]]
-          con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err, result) => {
-            if(err) console.log(err)
-            else{
-              console.log(`Hive user ${data.author} with Twitter username ${twitter} is now registered.`)
-              replyToComment(`Twitter account ${twitter} was registered to Hive account ${data.author}!`, data, twitter)
-            }
-          })
-        } else {
-          console.log(`Hive user ${data.author} or Twitter account ${twitter} is already registered`)
-          replyToComment(`Hive user ${data.author} or Twitter account ${twitter} is already registered`, data, twitter)
-        }
+function completeRegistration(twitter, data){
+  con.query('SELECT * FROM users WHERE hive = ? OR twitter = ?', [data.author, twitter], (err, result) => {
+    if(err) console.log(err)
+    else {
+      if (result.length == 0){
+        let values = [[data.author, twitter, new Date().getTime(), new Date()]]
+        con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err, result) => {
+          if(err) console.log(err)
+          else{
+            console.log(`Hive user ${data.author} with Twitter username ${twitter} is now registered.`)
+            replyToComment(`Twitter account ${twitter} was registered to Hive account ${data.author}!`, data, twitter)
+          }
+        })
+      } else {
+        console.log(`Hive user ${data.author} or Twitter account ${twitter} is already registered`)
+        replyToComment(`Hive user ${data.author} or Twitter account ${twitter} is already registered`, data, twitter)
       }
-    })
-  }
+    }
+  })
 }
+
 
 
 async function replyToComment(message, data, twitter){
