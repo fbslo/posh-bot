@@ -29,6 +29,7 @@ async function replayBlocks(start_block){
           let type = result.transactions[i].operations[0][0]
           let data = result.transactions[i].operations[0][1]
           if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'register-your-twitter-account'){
+            data.body = data.body.replace(/\n/g, " ");
             if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
               console.log("Check if it's already registered!")
               isAlreadyRegistred(data)
@@ -77,7 +78,7 @@ async function replayBlocks(start_block){
             function randomInteger(min, max) {
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-          } else if(i == result.transactions-1){
+          } else if(i == result.transactions.length-1){
             nextBlock(start_block)
           }
         }
@@ -122,7 +123,7 @@ function isAlreadyRegistred(data){
   })
 }
 
-function completeRegistration(twitter, data){
+function completeRegistration(data, twitter){
   con.query('SELECT * FROM users WHERE hive = ? OR twitter = ?', [data.author, twitter], (err, result) => {
     if(err) console.log(err)
     else {
@@ -154,7 +155,7 @@ async function replyToComment(message, data, twitter){
         let isAccountRegistred = []
         for(i in result){
           if(result[i].author == 'poshtoken'){
-            isAccountRegistred.poush(true)
+            isAccountRegistred.push(true)
           }
         }
         if(isAccountRegistred.length == 0) reply(message, data, twitter)

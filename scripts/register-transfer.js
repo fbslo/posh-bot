@@ -2,6 +2,8 @@ const config = require('../config.json')
 const hive = require('@hiveio/hive-js')
 const con = require('../database.js')
 
+const register = require("./register.js")
+
 hive.config.set('alternative_api_endpoints', ["https://anyx.io", "https://api.hive.blog", "https://api.hivekings.com", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
 
 module.exports = {
@@ -25,6 +27,11 @@ module.exports = {
               var data = result.transactions[i].operations[0][1]
               if(type == 'transfer' && data.to == config.account_name){
                 processPayment(data)
+              } else if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'register-your-twitter-account'){
+                data.body = data.body.replace(/\n/g, " ");
+                if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
+                  register.isAlreadyRegistred(data)
+                }
               }
             }
           }
@@ -83,4 +90,13 @@ function sendErrorTransfer(data, memo){
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function IsJsonString(str) {
+  try {
+      JSON.parse(str);
+  } catch (e) {
+      return false;
+  }
+  return true;
 }

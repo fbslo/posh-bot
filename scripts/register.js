@@ -11,18 +11,18 @@ var client = new Twitter({
 
 //register https://twitter.com/GPujs/status/1279072304299937793
 
-async function new_registrations(){
-  hive.api.getContentReplies('poshtoken', 'register-your-twitter-account', function(err, result) {
-    if(err) console.log("Error getting new registrations! Error: "+err)
-    else {
-      for (i in result){
-        if(result[i].body.split(" ")[0].toLowerCase() == "register" && result[i].body.split(" ")[1].includes("twitter.com")){
-          isAlreadyRegistred(result[i])
-        }
-      }
-    }
-  });
-}
+// async function new_registrations(){
+//   hive.api.getContentReplies('poshtoken', 'register-your-twitter-account', function(err, result) {
+//     if(err) console.log("Error getting new registrations! Error: "+err)
+//     else {
+//       for (i in result){
+//         if(result[i].body.split(" ")[0].toLowerCase() == "register" && result[i].body.split(" ")[1].includes("twitter.com")){
+//           isAlreadyRegistred(result[i])
+//         }
+//       }
+//     }
+//   });
+// }
 
 function isAlreadyRegistred(data){
   hive.api.getContentReplies(data.author, data.permlink, function(err, result) {
@@ -109,4 +109,4 @@ function makeid(length) {
    return result;
 }
 
-module.exports.new_registrations = new_registrations
+module.exports.isAlreadyRegistred = isAlreadyRegistred
