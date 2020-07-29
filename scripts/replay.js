@@ -11,7 +11,7 @@ var client = new Twitter({
 
 hive.config.set('alternative_api_endpoints', ["https://api.hive.blog", "https://api.hivekings.com", "https://anyx.io", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
 
-replayBlocks(45559503)
+replayBlocks(45560491)
 
 
 async function replayBlocks(start_block){
@@ -28,8 +28,9 @@ async function replayBlocks(start_block){
         for(i in result.transactions){
           let type = result.transactions[i].operations[0][0]
           let data = result.transactions[i].operations[0][1]
-          if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'posh-bot-how-does-it-work'){
+          if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'register-your-twitter-account'){
             if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
+              console.log("Check if it's already registered!")
               isAlreadyRegistred(data)
             }
           } else if(type == 'transfer' && data.to == config.account_name){
@@ -76,9 +77,10 @@ async function replayBlocks(start_block){
             function randomInteger(min, max) {
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
+          } else if(i == result.transactions-1){
+            nextBlock(start_block)
           }
         }
-        nextBlock(start_block)
       } else {
         console.log('Error scanning blockchain: Block '+ start_block)
         setTimeout(() => {
@@ -90,17 +92,21 @@ async function replayBlocks(start_block){
 }
 
 function isAlreadyRegistred(data){
+  console.log("isAlreadyRegistred")
+  let tweet = data.body.split(" ")
   let id = tweet[1].split("/")[5].split("?")[0]
   let twitter_account = tweet[1].split("/")[3].toLowerCase()
   con.query("SELECT * FROM users WHERE hive = ? OR twitter = ?;", [data.author, twitter_account], (err, result) => {
     if(err) console.log(err)
     else {
       if(result.length == 0){
+        console.log("Check the tweet!")
         client.get('statuses/show/'+id, function(error, tweets, response) {
            if(error) console.log("Error getting Twitter API data! Error: "+error)
            else if(tweets.text){
              if(tweets.text.includes("register-hive-account")){
                let tweet_split = tweets.text//.split("-")
+               console.log(tweet_split.substring(22), data.author)
                if(tweet_split.substring(22) == data.author){
                  register(data)
                }
