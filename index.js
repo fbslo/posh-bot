@@ -1,7 +1,7 @@
 const con = require('./database.js')
 const config = require("./config.json")
 
-const register_transfer = require("./scripts/register-transfer.js")
+const scan = require("./scripts/scan.js")
 const search_register_tweets = require("./scripts/search_register_tweets.js")
 const search = require("./scripts/search.js")
 const score = require("./scripts/score.js")
@@ -21,5 +21,5 @@ setInterval(() => {
 }, 1000 * 60 * 60 * 24) //every 1 day
 
 search.start()
-register_transfer.scan()
+scan.scan()
 search_register_tweets.start()

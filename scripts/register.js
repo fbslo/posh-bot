@@ -24,26 +24,26 @@ var client = new Twitter({
 //   });
 // }
 
-function isAlreadyRegistred(data){
-  hive.api.getContentReplies(data.author, data.permlink, function(err, result) {
-    if(err) console.log("Error getting new registrations! Error: "+err)
-    else {
-      if(result.length == 0){
-        checkTwitterData(data)
-      } else {
-        let isAccountRegistred = []
-        for (i in result){
-          if(result[i].author == config.account_name){
-            isAccountRegistred.push(result[i].author)
-          }
-        }
-        if(isAccountRegistred.length == 0){
-          checkTwitterData(data)
-        }
-      }
-    }
-  });
-}
+// function isAlreadyRegistred(data){
+//   hive.api.getContentReplies(data.author, data.permlink, function(err, result) {
+//     if(err) console.log("Error getting new registrations! Error: "+err)
+//     else {
+//       if(result.length == 0){
+//         checkTwitterData(data)
+//       } else {
+//         let isAccountRegistred = []
+//         for (i in result){
+//           if(result[i].author == config.account_name){
+//             isAccountRegistred.push(result[i].author)
+//           }
+//         }
+//         if(isAccountRegistred.length == 0){
+//           checkTwitterData(data)
+//         }
+//       }
+//     }
+//   });
+// }
 
 function checkTwitterData(data){
   let tweet = data.body.split(" ")
@@ -109,4 +109,4 @@ function makeid(length) {
    return result;
 }
 
-module.exports.isAlreadyRegistred = isAlreadyRegistred
+module.exports.checkTwitterData = checkTwitterData

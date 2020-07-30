@@ -6,51 +6,6 @@ const register = require("./register.js")
 
 hive.config.set('alternative_api_endpoints', ["https://anyx.io", "https://api.hive.blog", "https://api.hivekings.com", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
 
-module.exports = {
-  scan: async function scan(){
-    hive.api.getDynamicGlobalProperties(function(err, result) {
-      if(err) restart()
-      else {
-        getDataFromBlock(result.head_block_number)
-      }
-    });
-
-    function getDataFromBlock(blockNum){
-      hive.api.getBlock(blockNum, function(err, result) {
-        if(err){
-          restart(err)
-        } else {
-          if(result && result != null){
-            let time = result.timestamp
-            for(i in result.transactions){
-              let type = result.transactions[i].operations[0][0]
-              var data = result.transactions[i].operations[0][1]
-              if(type == 'transfer' && data.to == config.account_name){
-                processPayment(data)
-              } else if (type == 'comment' && IsJsonString(data.json_metadata) && data.parent_permlink == 'register-your-twitter-account'){
-                data.body = data.body.replace(/\n/g, " ");
-                if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
-                  register.isAlreadyRegistred(data)
-                }
-              }
-            }
-          }
-        }
-        setTimeout(() => {
-          getDataFromBlock(blockNum + 1)
-        }, 3000)
-      });
-    }
-
-    function restart(err){
-      console.log("Error scanning HIVE blockchain: "+err)
-      setTimeout(() => {
-        scan()
-      }, 6000)
-    }
-  }
-}
-
 function processPayment(data){
   let id = randomInteger(0, 1000000)
   let memo = `Please create tweet with this content: "#poshbotregistration ${id}"`
@@ -100,3 +55,5 @@ function IsJsonString(str) {
   }
   return true;
 }
+
+module.exports.processPayment = processPayment
