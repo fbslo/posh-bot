@@ -6,9 +6,11 @@ const register = require("./register.js")
 const register_transfer = require("./register-transfer.js")
 
 hive.config.set('alternative_api_endpoints', ["https://anyx.io", "https://api.hive.blog", "https://api.hivekings.com", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
+hive.api.setOptions({ url: 'https://anyx.io' });
 
 module.exports = {
   scan: async function scan(){
+    console.log("Starting scanning HIVE blockchain!")
     hive.api.getDynamicGlobalProperties(function(err, result) {
       if(err) restart()
       else {
@@ -27,8 +29,8 @@ module.exports = {
               let type = result.transactions[i].operations[0][0]
               var data = result.transactions[i].operations[0][1]
               if(type == 'transfer' && data.to == config.account_name){
-                regsiter_transfer.processPayment(data)
-              } else if (type == 'comment' && data.parent_permlink == 'register-your-twitter-account' && data.parent_author = 'poshtoken'){
+                register_transfer.processPayment(data)
+              } else if (type == 'comment' && data.parent_permlink == 'register-your-twitter-account' && data.parent_author == 'poshtoken'){
                 data.body = data.body.replace(/\n/g, " ");
                 if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
                   register.checkTwitterData(data)

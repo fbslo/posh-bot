@@ -19,7 +19,7 @@ function start(){
   });
 
   stream.on('error', function(error) {
-    console.log("Error getting Tweets from API: "+ error)
+    console.log("Error getting Tweets from API (registration search): "+ error)
     setTimeout(() => {
       start()
     }, 5000)
