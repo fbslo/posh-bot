@@ -8,18 +8,18 @@ const score = require("./scripts/score.js")
 const tokens = require("./scripts/tokens.js")
 const daily = require("./scripts/daily_post.js")
 
-// setInterval(() => {
-//   score.calculate()
-// }, 1000 * 60 * 30) //every 30 minutes
-//
-// setInterval(() => {
-//   tokens.give()
-// }, 1000 * 60 * 60 * 24) //every 1 day
-//
-// setInterval(() => {
-//   daily.post()
-// }, 1000 * 60 * 60 * 24) //every 1 day
+setInterval(() => {
+  score.calculate()
+}, 1000 * 60 * 30) //every 30 minutes
 
-// search.start()
-// scan.scan()
+setInterval(() => {
+  tokens.give()
+}, 1000 * 60 * 60 * 24) //every 1 day
+
+setInterval(() => {
+  daily.post()
+}, 1000 * 60 * 60 * 24) //every 1 day
+
+search.start()
+scan.scan()
 search_register_tweets.start()
