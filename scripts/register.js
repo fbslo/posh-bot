@@ -52,8 +52,8 @@ function checkTwitterData(data){
   client.get('statuses/show/'+id, function(error, tweets, response) {
      if(error) console.log("Error getting Twitter API data! Error: "+error)
      else if(tweets.text){
-       if(tweets.text.includes("register-hive-account")){
-         if(tweets.text.substring(22) == data.author){
+       if(tweets.text.toLowerCase().includes("register-hive-account")){
+         if(tweets.text.substring(22).toLowerCase() == data.author.toLowerCase()){
            completeRegistration(twitter_account, data)
          } else {
            console.log(`Author is not correct, Hive: ${data.author}, Twitter: ${tweets.text.substring(22)}`)

@@ -12,7 +12,7 @@ module.exports = {
   scan: async function scan(){
     console.log("Starting scanning HIVE blockchain!")
     hive.api.getDynamicGlobalProperties(function(err, result) {
-      if(err) restart()
+      if(err) restart(err)
       else {
         getDataFromBlock(result.head_block_number)
       }

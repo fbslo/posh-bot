@@ -15,7 +15,7 @@ var client = new Twitter({
 
 
 function start(){ //REST search API is returning only limited amount of results, so I used streaming API!
-  var stream = client.stream('statuses/filter', {track: '#posh', tweet_mode: 'extended'});
+  var stream = client.stream('statuses/filter', {track: '#hive', tweet_mode: 'extended'});
   stream.on('data', function(event) {
     if(!event.retweeted_status){
       forAllTweets(event)
