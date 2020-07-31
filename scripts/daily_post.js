@@ -4,8 +4,9 @@ const hive = require('@hiveio/hive-js')
 
 
 function post(){
-  //let one_day = new Date().getTime() - 86400000
-  con.query(`SELECT * FROM twitter_posts WHERE points_time IS NOT NULL AND posted IS NULL;`, (err, result) => { //points_time <= ${one_day}
+  let one_day = new Date().getTime() - 864000000
+  let now = new Date().getTime()
+  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE points_time BETWEEN ${one_day} AND ${now} GROUP BY hive_username, user_name ORDER BY sum DESC;`, (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database: Error: "+err)
     else {
       submitHivePost(result)
@@ -25,26 +26,61 @@ async function submitHivePost(data){
         })
   let permlink = makeid(15).toLowerCase()
   if(data.length == 0){
+    console.log('empty')
     hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, 'No new #POSH tweets today :(', jsonMetadata, function(err, result) {
       if(err) console.log('Daily post failed! Err: '+err)
       else console.log('Daily (EMPTY) post submited!')
     });
   } else {
-    let body = await prepareBody(data)
-    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, body, jsonMetadata, function(err, result) {
-      if(err) console.log('Daily post failed! Err: '+err)
-      else console.log('Daily post submited!')
-    });
+    richlist(async (rich) => {
+      let body = await prepareBody(data)
+      body += `\n\n<center><h3>Top 50 earners</h3></center>\n\n|Hive username|Twitter username|Tokens earned|\n|---|---|---|\n`+rich
+      hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, body, jsonMetadata, function(err, result) {
+        if(err) console.log('Daily post failed! Err: '+err)
+        else {
+          // hive.broadcast.commentOptions(config.posting_key, config.account_name, permlink, 1000000.000, 10000, true, true,
+          //   [[0, {
+          //       "beneficiaries": [
+          //           {
+          //               "account": "fbslo",
+          //               "weight": 10000
+          //           }
+          //       ]
+          //   }]],
+          //   function (err, result) {
+          //     if(err){
+          //       console.log('Failure! ' + err);
+          //     } else {
+                console.log(`Post was posted!`)
+          //     }
+          //   }
+          // );
+        }
+      });
+    })
   }
 }
 
 function prepareBody(data){
-  let body = 'Total number of tokens distributed today: 1,000\n\n'
+  let body = '<center><h3>Total number of tokens distributed today: 1,000</h3></center>\n\n|Hive username|Twitter username|Tokens earned today|\n|---|---|---|\n'
   for (i in data){
-    body += `Hive user @${data[i].hive_username} posted as [@${data[i].user_name}](https://twitter.com/${data[i].user_name}) on Twitter and received ${data[i].points} tokens for this [Tweet](https://twitter.com/${data[i].user_name}/status/${data[i].id}) <br>`
+    body += `|@${data[i].hive_username}|${data[i].user_name}|${data[i].sum}|\n`
     updatePost(data[i].id)
   }
   return body;
+}
+
+function richlist(callback){
+  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE points_time > 0 GROUP BY hive_username, user_name ORDER BY sum DESC LIMIT 50;`, (err, result) => {
+    if(err) callback('Server error!')
+    else {
+      let body = ''
+      for (i in result){
+        body += `|@${result[i].hive_username}|${result[i].user_name}|${result[i].sum}|\n`
+      }
+      callback(body)
+    }
+  })
 }
 
 function makeid(length) {
