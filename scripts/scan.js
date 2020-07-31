@@ -4,6 +4,8 @@ const con = require('../database.js')
 
 const register = require("./register.js")
 const register_transfer = require("./register-transfer.js")
+const balance = require("./balance.js")
+
 
 hive.config.set('alternative_api_endpoints', ["https://anyx.io", "https://api.hive.blog", "https://api.hivekings.com", "https://api.openhive.network", "hived.privex.io", "rpc.ausbit.dev", "https://hive.roelandp.nl"]);
 hive.api.setOptions({ url: 'https://anyx.io' });
@@ -34,6 +36,10 @@ module.exports = {
                 data.body = data.body.replace(/\n/g, " ");
                 if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
                   register.checkTwitterData(data)
+                }
+              } else if (type == 'comment' && (data.parent_author == 'posh-bot' || data.parent_author == 'posh-bot')){
+                if(data.body.toLowerCase() == "!balance"){
+                  balance.displayUserBalance(data)
                 }
               }
             }

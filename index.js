@@ -20,6 +20,6 @@ setInterval(() => {
   daily.post()
 }, 1000 * 60 * 60 * 24) //every 1 day
 
-search.start()
+// search.start()
 scan.scan()
-search_register_tweets.start()
+// search_register_tweets.start()
