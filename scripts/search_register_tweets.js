@@ -44,7 +44,7 @@ function processTweet(data){
           else{
             console.log(`Hive user ${result[0].hive} with Twitter username ${data.user.screen_name} is now registered.`)
             upadateRegistrationTable(id)
-            //replyToComment(`Twitter account ${data.user.screen_name} was registered to Hive account ${result[0].hive}!`, result[0].hive, data.user.screen_name)
+            replyToComment(`Twitter account ${data.user.screen_name} was registered to Hive account ${result[0].hive}!`, result[0].hive, data.user.screen_name)
           }
         })
       }
@@ -58,13 +58,13 @@ function upadateRegistrationTable(id){
   })
 }
 
-function replyToComment(message, hive, twitter){
+function replyToComment(message, hive_username, twitter){
   var permlink = makeid(15).toLowerCase()
   var jsonMetadata = JSON.stringify({
           app: `posh-bot`,
           author: 'fbslo'
         })
-  let query = {tag: hive, limit: 2}
+  let query = {tag: hive_username, limit: 2}
   hive.api.getDiscussionsByBlog(query, function(err, blog) {
     if(err) console.log("Error getting blog for "+hive)
     else {
