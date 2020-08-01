@@ -27,7 +27,7 @@ async function submitHivePost(data){
   let permlink = makeid(15).toLowerCase()
   if(data.length == 0){
     console.log('empty')
-    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, 'No new #POSH tweets today :(', jsonMetadata, function(err, result) {
+    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, 'No new #POSH tweets received tokens today :(', jsonMetadata, function(err, result) {
       if(err) console.log('Daily post failed! Err: '+err)
       else console.log('Daily (EMPTY) post submited!')
     });
