@@ -34,6 +34,7 @@ module.exports = {
                 register_transfer.processPayment(data)
               } else if (type == 'comment' && data.parent_permlink == 'register-your-twitter-account' && data.parent_author == 'poshtoken'){
                 data.body = data.body.replace(/\n/g, " ");
+                console.log(`Found one registration comment: ${data.body}`)
                 if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
                   register.checkTwitterData(data)
                 }
