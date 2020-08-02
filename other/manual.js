@@ -49,8 +49,8 @@ function replyToComment(message, hive_username, twitter){
           app: `posh-bot`,
           author: 'fbslo'
         })
-  let query = {tag: hive_username, limit: 2}
-  hive.api.getDiscussionsByBlog(query, function(err, blog) {
+  let beforeDate = new Date().toISOString().split('.')[0];
+  hive.api.getDiscussionsByAuthorBeforeDate(hive_username, null, beforeDate, 1, function(err, blog) {
     if(err) console.log("Error getting blog for "+hive)
     else {
       hive.broadcast.comment(config.posting_key, blog[0].author, blog[0].permlink, config.account_name, permlink, '', message, jsonMetadata, function(err, result) {
