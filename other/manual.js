@@ -3,7 +3,7 @@ const con = require('../database.js')
 const config = require("../config.json")
 
 
-var list = [['whack.science', "CryptoSpacely"], ["faizarfatria", "fhayzar"], ["opeyemioguns", "opeyemioguns3"], ["anthonyadavisii", "Alex_d_281"], ["dalz", "Dalz19631657"], ["eve66", "misionera66"], ["hafizullah", "hafizdhaka"], ["mistakili", "Mistakili"], ["badmusgreene", "thebadmusgreene"], ["prechyrukky", "Prechychizzy"],  ["smyle", "MuyiwaJedalo"], ["kenny-crane", "KennyCrane"],  ["johnlambrechts", "John_Lambrechts"], ["browery", "Pe_A_eM"], ["agmoore", "A_G_Moore"], ["unklebonehead", "BoneheadUnkle"], ["ybanezkim26", "ybanezkim26"], ["ilazramusic",  "Dimeilaz"], ["jason04", "Ijason04I"], ["robmojo", "robmojo1"], ["cleanplanet", "cleanplanet_"], ["tati126", "Tati_126"], ["lisamgentile1961", "lisamgentile"], ["ayopeju", "ayopeju1"], ["mattsanthonyit", "mattsanthonyit"], ["johnolusegun", "Johnolusegun_1"], ["oladele-art", "art_oladele"], ["cmplxty", "XtyCmpl"], ["artemislives",  "BreugelMarike"], ["naturalmedicine", "Lotus_Medicine"], ["stevenwood", "StevenWood_HIVE"], ["pixiepost", "ThePixiePost"], ["themanualbot", "best_of_time_"], ["forykw",  "forkyishere"], ["dudeontheweb", "dudeontheweb"], ["faisalamin", "FaisalA76141551"]]
+var list = [['cadawg', "_CADawg"], ["sbaby", "sbaby48002048"], ["toofasteddie", "thecryptorunner"], ["franzzonline", "Franzzonline"], ["plantstoplanks", "PlantsToPlanks"], ["hatoto", "kaesetopf"], ["zoeanavid", "ZoeAnavidV"]]
 
 start(0, list)
 
