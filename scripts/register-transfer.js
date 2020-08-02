@@ -23,8 +23,9 @@ function storeToDatabase(memo, id, data){
           else {
             hive.api.getAccounts([data.from], (err, res) => {
               var encoded = hive.memo.encode(config.active_key, res[0].memo_key, `#${memo}`)
-              hive.broadcast.transfer(config.active_key, config.account_name, data.from, data.amount, encoded, function(err, result) {
-                console.log(err, result);
+              hive.broadcast.transfer(config.active_key, config.account_name, data.from, data.amount, encoded, function(err2, result2) {
+                if (err2)  console.log("Error sending confirmation transfer for "+data.from)
+                else console.log("Confirmation transfer send to "+data.from)
               });
             });
           }

@@ -31,6 +31,7 @@ module.exports = {
               let type = result.transactions[i].operations[0][0]
               var data = result.transactions[i].operations[0][1]
               if(type == 'transfer' && data.to == config.account_name){
+                console.log(`Found one registration trsnafer: ${data.from}`)
                 register_transfer.processPayment(data)
               } else if (type == 'comment' && data.parent_permlink == 'register-your-twitter-account' && data.parent_author == 'poshtoken'){
                 data.body = data.body.replace(/\n/g, " ");
