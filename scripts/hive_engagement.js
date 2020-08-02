@@ -4,7 +4,7 @@ const hive = require('@hiveio/hive-js')
 async function getHiveScore(data, callback){
   try {
     if(data.hive_link.includes("3speak.online")){
-      if(data.hive_link.split("=")[1].split("/")[0] == data.hive_username){
+      if(data.hive_link.split("=")[1].split("/")[0].split('&')[0] == data.hive_username){
         getPostEngagement(data.hive_username, data.hive_link.split("@")[1].split("/")[1], data, (holders) => {
           callback(holders.length * 5)
         })
