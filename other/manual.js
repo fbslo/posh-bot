@@ -3,7 +3,7 @@ const con = require('../database.js')
 const config = require("../config.json")
 
 
-var list = [['cadawg', "_CADawg"], ["sbaby", "sbaby48002048"], ["toofasteddie", "thecryptorunner"], ["franzzonline", "Franzzonline"], ["plantstoplanks", "PlantsToPlanks"], ["hatoto", "kaesetopf"], ["zoeanavid", "ZoeAnavidV"]]
+var list = [['cadawg', "_CADawg"], ["sbaby", "sbaby48002048"], ["toofasteddie", "thecryptorunner"], ["franzzonline", "Franzzonline"], ["plantstoplanks", "PlantsToPlanks"], ["hatoto", "kaesetopf"], ["zoeanavid", "ZoeAnavidV"], ["fionasfavourites", "FionasFavourite"]]
 
 start(0, list)
 
