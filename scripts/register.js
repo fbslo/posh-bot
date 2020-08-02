@@ -46,21 +46,25 @@ var client = new Twitter({
 // }
 
 function checkTwitterData(data){
-  let tweet = data.body.split(" ")
-  let id = tweet[1].split("/")[5].split("?")[0]
-  let twitter_account = tweet[1].split("/")[3].toLowerCase()
-  client.get('statuses/show/'+id, function(error, tweets, response) {
-     if(error) console.log("Error getting Twitter API data! Error: "+error)
-     else if(tweets.text){
-       if(tweets.text.toLowerCase().includes("register-hive-account")){
-         if(tweets.text.substring(22).toLowerCase() == data.author.toLowerCase()){
-           completeRegistration(twitter_account, data)
-         } else {
-           console.log(`Author is not correct, Hive: ${data.author}, Twitter: ${tweets.text.substring(22)}`)
+  try {
+    let tweet = data.body.split(" ")
+    let id = tweet[1].split("/")[5].split("?")[0]
+    let twitter_account = tweet[1].split("/")[3].toLowerCase()
+    client.get('statuses/show/'+id, function(error, tweets, response) {
+       if(error) console.log("Error getting Twitter API data! Error: "+error)
+       else if(tweets.text){
+         if(tweets.text.toLowerCase().includes("register-hive-account")){
+           if(tweets.text.substring(22).toLowerCase() == data.author.toLowerCase()){
+             completeRegistration(twitter_account, data)
+           } else {
+             console.log(`Author is not correct, Hive: ${data.author}, Twitter: ${tweets.text.substring(22)}`)
+           }
          }
        }
-     }
-  });
+    });
+  } catch (e) {
+    console.log("Error while getting tweet data for regsitrations. Details: "+e)
+  }
 }
 
 function completeRegistration(twitter, data){

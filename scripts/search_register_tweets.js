@@ -27,29 +27,33 @@ function start(){
 }
 
 function processTweet(data){
-  let id;
-  if(data.extended_tweet){
-    id = data.extended_tweet.full_text.split(" ")[1]
-  } else {
-    id = data.text.split(" ")[1]
-  }
-  con.query("SELECT * FROM registration WHERE id = ? AND used = '0';", [id], (err, result) => {
-    if(err) console.log(`Error selecting id: ${id}`)
-    else {
-      if(result.length == 0) console.log(`No registration with id: ${id} found`)
-      else {
-        let values = [[result[0].hive, data.user.screen_name, new Date().getTime(), new Date()]]
-        con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err1, result1) => {
-          if(err1) console.log(err1)
-          else{
-            console.log(`Hive user ${result[0].hive} with Twitter username ${data.user.screen_name} is now registered.`)
-            upadateRegistrationTable(id)
-            replyToComment(`Twitter account ${data.user.screen_name} was registered to Hive account ${result[0].hive}!`, result[0].hive, data.user.screen_name)
-          }
-        })
-      }
+  try {
+    let id;
+    if(data.extended_tweet){
+      id = data.extended_tweet.full_text.split(" ")[1]
+    } else {
+      id = data.text.split(" ")[1]
     }
-  })
+    con.query("SELECT * FROM registration WHERE id = ? AND used = '0';", [id], (err, result) => {
+      if(err) console.log(`Error selecting id: ${id}`)
+      else {
+        if(result.length == 0) console.log(`No registration with id: ${id} found`)
+        else {
+          let values = [[result[0].hive, data.user.screen_name, new Date().getTime(), new Date()]]
+          con.query("INSERT INTO users (hive, twitter, time, human_time) VALUES ?", [values], (err1, result1) => {
+            if(err1) console.log(err1)
+            else{
+              console.log(`Hive user ${result[0].hive} with Twitter username ${data.user.screen_name} is now registered.`)
+              upadateRegistrationTable(id)
+              replyToComment(`Twitter account ${data.user.screen_name} was registered to Hive account ${result[0].hive}!`, result[0].hive, data.user.screen_name)
+            }
+          })
+        }
+      }
+    })
+  } catch (e) {
+    console.log("Error while parsing tweet for transfer registration. Details: "+e)
+  }
 }
 
 function upadateRegistrationTable(id){
