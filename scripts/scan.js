@@ -58,7 +58,7 @@ module.exports = {
       console.log("Error scanning HIVE blockchain: "+err)
       setTimeout(() => {
         scan()
-      }, 6000)
+      }, 3000)
     }
   }
 }
