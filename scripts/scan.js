@@ -21,6 +21,7 @@ module.exports = {
     });
 
     function getDataFromBlock(blockNum){
+      if(blockNum % 100 == 0) displayLag(blockNum)
       hive.api.getBlock(blockNum, function(err, result) {
         if(err){
           restart(err)
@@ -60,4 +61,13 @@ module.exports = {
       }, 6000)
     }
   }
+}
+
+function displayLag(blockNum){
+  hive.api.getDynamicGlobalProperties(function(err, result) {
+    if(err) console.log("Error getting globalPropertis for lag check...")
+    else {
+      console.log(`Current head block: ${result.head_block_number}, current scanned block: ${blockNum}, lag: ${result.head_block_number - blockNum}`)
+    }
+  });
 }
