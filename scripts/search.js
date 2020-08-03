@@ -23,7 +23,7 @@ function start(){ //REST search API is returning only limited amount of results,
   });
 
   stream.on('error', function(error) {
-    console.log("Error getting Tweets from API: "+ error)
+    console.log("Error getting Tweets from API: "+ JSON.stringify(error))
     setTimeout(() => {
       start()
     }, 5000)
