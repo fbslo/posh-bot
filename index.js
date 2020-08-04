@@ -24,3 +24,7 @@ setInterval(() => {
 search.start()
 scan_stream.scan()
 search_register_tweets.start()
+
+if(process.env.POST_NOW == 'true'){
+  daily.post()
+}
