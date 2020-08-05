@@ -47,6 +47,7 @@ var client = new Twitter({
 
 function checkTwitterData(data){
   try {
+    data.body = data.body.replace(/\n/g, " ");
     let tweet = data.body.split(" ")
     let id = tweet[1].split("/")[5].split("?")[0]
     let twitter_account = tweet[1].split("/")[3].toLowerCase()
