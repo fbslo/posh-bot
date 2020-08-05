@@ -28,7 +28,7 @@ module.exports = {
           let body = data.body.replace(/\n/g, " ");
           console.log(body)
           if(body.split(" ")[0].toLowerCase() == "register" && body.split(" ")[1].includes("twitter.com")){
-            console.log(`Found one registration comment: ${data.body}`)
+            console.log(`Found one registration comment: ${data.body} from ${data.author}`)
             register.checkTwitterData(data)
           }
         }
