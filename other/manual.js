@@ -3,7 +3,7 @@ const con = require('../database.js')
 const config = require("../config.json")
 
 
-var list = [['tykee', "realmikes_tykee"], ["anwars", "anwars14441962"], ["adncabrera", "adncabrera1"], ["andy4475", "Social_Hiver"], ["gniksivart", "GnikSivart"], ["fabiyamada", "mxYamada"], ["jauregui98", "gjauregui98"], ["mister-meeseeks", "MisterMeeseeks3"]]
+var list = [['geadriana', "adrianagam"], ["dimeshana", "Shanillet"], ["mballesteros", "mariangel1608"], ["angelica7", "lmartinezmdl"], ["marybellrg", "MARYBELLRG"], ["edje", "hggnooo"]]
 
 start(0, list)
 
