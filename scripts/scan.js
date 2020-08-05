@@ -40,7 +40,7 @@ module.exports = {
                   console.log(`Found one registration comment: ${data.body}`)
                   register.checkTwitterData(data)
                 }
-              } else if (type == 'comment' && (data.parent_author == 'posh-bot' || data.parent_author == 'posh-bot')){
+              } else if (type == 'comment' && (data.parent_author == 'posh-bot' || data.parent_author == 'poshtoken')){
                 if(data.body.toLowerCase() == "!balance"){
                   balance.displayUserBalance(data)
                 }
