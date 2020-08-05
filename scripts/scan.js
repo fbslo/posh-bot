@@ -35,13 +35,14 @@ module.exports = {
                 console.log(`Found one registration transfer: ${data.from}`)
                 register_transfer.processPayment(data)
               } else if (type == 'comment' && data.parent_author == 'poshtoken'){
-                data.body = data.body.replace(/\n/g, " ");
-                if(data.body.split(" ")[0].toLowerCase() == "register" && data.body.split(" ")[1].includes("twitter.com")){
+                let body = data.body.replace(/\n/g, " ");
+                if(body.split(" ")[0].toLowerCase() == "register" && body.split(" ")[1].includes("twitter.com")){
                   console.log(`Found one registration comment: ${data.body}`)
                   register.checkTwitterData(data)
                 }
               } else if (type == 'comment' && (data.parent_author == 'posh-bot' || data.parent_author == 'poshtoken')){
                 if(data.body.toLowerCase() == "!balance"){
+                  console.log(`Found one !balance comment from ${data.author}`)
                   balance.displayUserBalance(data)
                 }
               }
