@@ -4,11 +4,13 @@ const hive = require('@hiveio/hive-js')
 
 
 function post(){
-  let one_day = new Date().getTime() - 86400000
-  let now = new Date().getTime()
+  var one_day = new Date().getTime() - 86400000
+  var now = new Date().getTime()
   con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE points_time BETWEEN ${one_day} AND ${now} GROUP BY hive_username, user_name ORDER BY sum DESC;`, (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database: Error: "+err)
     else {
+      one_day = new Date(one_day) + ''
+      now = new Date(now) + ''
       submitHivePost(result, one_day, now)
     }
   })
@@ -27,7 +29,7 @@ async function submitHivePost(data, one_day, now){
   let permlink = makeid(15).toLowerCase()
   if(data.length == 0){
     console.log('empty')
-    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, `No new #POSH tweets received tokens today :(\nTweets that were created between ${new Date(one_day)} and ${new Date(one_day)}`, jsonMetadata, function(err, result) {
+    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, `No new #POSH tweets received tokens today :(\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]}`, jsonMetadata, function(err, result) {
       if(err) console.log('Daily post failed! Err: '+err)
       else console.log('Daily (EMPTY) post submited!')
     });
@@ -62,7 +64,7 @@ async function submitHivePost(data, one_day, now){
 }
 
 function prepareBody(data, one_day, now){
-  let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${new Date(one_day)} and ${new Date(one_day)}\n\n|Hive username|Twitter username|Tokens earned today|\n|---|---|---|\n`
+  let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Twitter username|Tokens earned today|\n|---|---|---|\n`
   for (i in data){
     body += `|@${data[i].hive_username}|${data[i].user_name}|${data[i].sum}|\n`
     updatePost(data[i].id)

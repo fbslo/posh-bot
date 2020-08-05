@@ -24,9 +24,9 @@ setInterval(() => {
   daily.post()
 }, 1000 * 60 * 60 * 24 + 300) //every 1 day
 
-// search.start()
-// scan_stream.scan()
-// search_register_tweets.start()
+search.start()
+scan_stream.scan()
+search_register_tweets.start()
 
 if(process.env.POST_NOW == 'true'){
   daily.post()
