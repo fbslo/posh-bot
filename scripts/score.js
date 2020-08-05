@@ -24,7 +24,7 @@ function calculate(){
 
 function getTweetEngagement(data, array, i){
   client.get('statuses/show/'+data.id, async function(error, tweets, response) {
-    if (error) console.log("Error getting Tweet data! Error: "+error)
+    if (error) console.log("Error getting Tweet data (at score)! Error: "+JSON.stringify(error))
     else {
       var score = (tweets.retweet_count * 5) + tweets.favorite_count
       hive.getHiveScore(data, (hive_score) => {
