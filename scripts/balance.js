@@ -4,7 +4,7 @@ const hive = require('@hiveio/hive-js')
 
 
 function displayUserBalance(data){
-  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE hive_username = ?;`, [data.author], (err, result) => { //points_time <= ${one_day}
+  con.query(`SELECT hive_username, SUM(points) AS sum FROM twitter_posts WHERE hive_username = ?;`, [data.author], (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database  for balance: Error: "+err)
     else {
       submitHiveComment(result, data)
@@ -22,7 +22,7 @@ async function submitHiveComment(data, hive_data){
   if(data.length == 0){
     body = 'You do not have any points. Are you  sure you are registered and have submited ant #hive tweets?'
   } else {
-    body = `Balance for @${data[0].hive_username} (${data[0].user_name} on Twitter) is: ${data[0].sum}`
+    body = `Balance for @${data[0].hive_username} is: ${data[0].sum}`
   }
   hive.broadcast.comment(config.posting_key, hive_data.author, hive_data.permlink, config.account_name, permlink, 'Balance!', body, jsonMetadata, function(err, result) {
     if(err) console.log('Balance comment failed! Err: '+err)
