@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@hiveio/hive-js": "^0.8.2",
+    "express": "^4.17.1",
     "get": "^1.4.0",
     "get-urls": "^9.2.1",
     "got": "^11.5.1",

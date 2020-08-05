@@ -1,3 +1,6 @@
+var express =  require("express");
+var app = express();
+
 const con = require('./database.js')
 const config = require("./config.json")
 
@@ -28,3 +31,18 @@ search_register_tweets.start()
 if(process.env.POST_NOW == 'true'){
   daily.post()
 }
+
+app.get('/', (req, res) => {
+  con.query("SELECT * FROM users;", (err, result) => {
+    if (err) res.status(500).json({error: 500, message: 'Internal Server Error'})
+    else {
+      let data = []
+      for (i in result){
+        data.push({hive: result[i].hive, twitter: result[i].twitter})
+      }
+      res.status(200).send(data)
+    }
+  })
+})
+
+app.listen(8080)
