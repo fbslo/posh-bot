@@ -33,7 +33,7 @@ if(process.env.POST_NOW == 'true'){
 }
 
 app.get('/', (req, res) => {
-  con.query("SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts GROUP BY hive_username, user_name ORDER BY sum DESC LIMIT 50;", (err, result) => {
+  con.query("SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts GROUP BY hive_username, user_name ORDER BY sum DESC;", (err, result) => {
     if (err) res.status(500).json({error: 500, message: 'Internal Server Error'})
     else {
       let data = []
