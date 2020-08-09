@@ -18,7 +18,7 @@ setInterval(() => {
 
 setInterval(() => {
   tokens.give()
-}, 1000 * 60 * 60 * 24) //every 1 day
+}, 1000 * 60 * 60 * 12) //every 1 day
 
 setInterval(() => {
   daily.post()

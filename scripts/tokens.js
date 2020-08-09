@@ -8,7 +8,7 @@ var client = new Twitter({
   bearer_token: config.bearer_token
 });
 
-let points  = 1000
+let points  = 500
 
 function give(){
   let one_day = new Date().getTime() - 86400000
