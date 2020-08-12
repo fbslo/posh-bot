@@ -31,7 +31,10 @@ async function getHiveScore(data, callback){
 async function getPostEngagement(author, permlink, data, callback){
   try {
     hive.api.getContentReplies(author, permlink, async function(err, result) {
-      if(err) console.log(`Error getting post ${author}/${permlink}! Error: ${err}`)
+      if(err){
+        console.log(`Error getting post ${author}/${permlink}! Error: ${err}`)
+        callback([])
+      }
       else {
         let holders = []
         async function checkHolders(result, i){
