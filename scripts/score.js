@@ -23,15 +23,23 @@ function calculate(){
 }
 
 function getTweetEngagement(data, array, i){
-  client.get('statuses/show/'+data.id, async function(error, tweets, response) {
-    if (error) console.log("Error getting Tweet data (at score)! Error: "+JSON.stringify(error))
-    else {
-      var score = (tweets.retweet_count * 5) + tweets.favorite_count
-      hive.getHiveScore(data, (hive_score) => {
-        saveDataToDatabase(Number(score + hive_score), data, array, i)
-      })
+  try {
+    client.get('statuses/show/'+data.id, async function(error, tweets, response) {
+      if (error) console.log("Error getting Tweet data (at score)! Error: "+JSON.stringify(error))
+      else {
+        var score = (tweets.retweet_count * 5) + tweets.favorite_count
+        hive.getHiveScore(data, (hive_score) => {
+          saveDataToDatabase(Number(score + hive_score), data, array, i)
+        })
+      }
+    })
+  } catch (e) {
+    console.log(`Error getting Tweet data (at score)! Error: ${e}`)
+    i++
+    if(i <= array.length -1){
+      getTweetEngagement(array[i], array, i)
     }
-  })
+  }
 }
 
 function saveDataToDatabase(score, data, array, i){
