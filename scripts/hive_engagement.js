@@ -29,32 +29,39 @@ async function getHiveScore(data, callback){
 }
 
 async function getPostEngagement(author, permlink, data, callback){
-  try {
-    hive.api.getContentReplies(author, permlink, async function(err, result) {
-      if(err){
-        console.log(`Error getting post ${author}/${permlink}! Error: ${err}`)
-        callback([])
-      }
-      else {
-        let holders = []
-        async function checkHolders(result, i){
-          let isHolder = await isEngageHolder(result[i].author)
-          if(isHolder == true){
-            holders.push(result[i].author)
-          }
-          i++
-          if(i != result.length-1){
-            checkHolders(result, i)
+  if(!author || !permlink || !data) callback([])
+  else {
+    try {
+      hive.api.getContentReplies(author, permlink, async function(err, result) {
+        if(err){
+          console.log(`Error getting post ${author}/${permlink}! Error: ${err}`)
+          callback([])
+        }
+        else {
+          if(result.length == 0){
+            callback([])
           } else {
-            callback(holders)
+            let holders = []
+            async function checkHolders(result, i){
+              let isHolder = await isEngageHolder(result[i].author)
+              if(isHolder == true){
+                holders.push(result[i].author)
+              }
+              i++
+              if(i != result.length-1){
+                checkHolders(result, i)
+              } else {
+                callback(holders)
+              }
+            }
+            checkHolders(result, 0)
           }
         }
-        checkHolders(result, 0)
-      }
-    });
-  } catch (e) {
-    console.log("Error while getting Hive engagement. Details: "+e)
-    callback([]) //return empty string
+      });
+    } catch (e) {
+      console.log("Error while getting Hive engagement. Details: "+e)
+      callback([]) //return empty array
+    }
   }
 }
 
