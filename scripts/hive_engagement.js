@@ -47,8 +47,8 @@ async function getPostEngagement(author, permlink, data, callback){
               if(isHolder == true){
                 holders.push(result[i].author)
               }
-              i++
               if(i != result.length-1){
+                i++
                 checkHolders(result, i)
               } else {
                 callback(holders)
