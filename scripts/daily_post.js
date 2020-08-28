@@ -29,10 +29,10 @@ async function submitHivePost(data, one_day, now){
   let permlink = makeid(15).toLowerCase()
   if(data.length == 0){
     console.log('empty')
-    hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, `No new #POSH tweets received tokens today :(\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]}`, jsonMetadata, function(err, result) {
-      if(err) console.log('Daily post failed! Err: '+err)
-      else console.log('Daily (EMPTY) post submited!')
-    });
+    // hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, `No new #POSH tweets received tokens today :(\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]}`, jsonMetadata, function(err, result) {
+    //   if(err) console.log('Daily post failed! Err: '+err)
+    //   else console.log('Daily (EMPTY) post submited!')
+    // });
   } else {
     richlist(async (rich, one_day, now) => {
       let body = await prepareBody(data, one_day, now)

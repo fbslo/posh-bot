@@ -22,7 +22,7 @@ setInterval(() => {
 
 setInterval(() => {
   daily.post()
-}, 1000 * 60 * 60 * 24 + 300) //every 1 day
+}, 1000 * 60 * 60 * 24 + 30000) //every 1 day
 
 search.start()
 scan_stream.scan()
