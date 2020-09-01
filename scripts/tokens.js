@@ -25,7 +25,7 @@ function give(){
         var points_per_score = points / total_score
         let accounts = []
         for (i in result){
-          accounts.push({account: result[i].user_name, points: parseFloat(points_per_score * result[i].score).toFixed(3), tweet_id: result[i].id})
+          accounts.push({account: result[i].user_name, points: parseFloat(points_per_score * result[i].score), tweet_id: result[i].id})
         }
         saveDataToDatabase(accounts[0], accounts, 0)
       }
