@@ -20,9 +20,12 @@ setInterval(() => {
   tokens.give()
 }, 1000 * 60 * 60 * 12) //every 1 day
 
-setInterval(() => {
-  daily.post()
-}, 1000 * 60 * 60 * 24 + 30000) //every 1 day
+setTimeout(() => {
+  setInterval(() => {
+    daily.post()
+  }, 1000 * 60 * 60 * 24) //every 1 day
+}, 1000 * 60 * 5)
+
 
 search.start()
 scan_stream.scan()
