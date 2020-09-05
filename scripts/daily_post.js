@@ -6,7 +6,7 @@ const hive = require('@hiveio/hive-js')
 function post(){
   var one_day = new Date().getTime() - 86400000
   var now = new Date().getTime()
-  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE points_time BETWEEN ${one_day} AND ${now} GROUP BY hive_username, user_name ORDER BY sum DESC;`, (err, result) => { //points_time <= ${one_day}
+  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE posted IS NULL AND points IS NOT NULL GROUP BY hive_username, user_name ORDER BY sum DESC;`, (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database: Error: "+err)
     else {
       one_day = new Date(one_day) + ''
