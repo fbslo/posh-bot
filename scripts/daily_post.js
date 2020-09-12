@@ -64,7 +64,7 @@ function prepareBody(data){
   var now = new Date().getTime()
   one_day = new Date(one_day) + ''
   now = new Date(now) + ''
-  let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Tokens earned today|\n|---|---|---|\n`
+  let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Tokens earned today|\n|---|---|\n`
   for (i in data){
     body += `|@${data[i].hive_username}|${data[i].sum}|\n`
     updatePost(data[i].id)
@@ -73,7 +73,7 @@ function prepareBody(data){
 }
 
 function richlist(callback){
-  con.query(`SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts WHERE points_time > 0 GROUP BY hive_username, user_name ORDER BY sum DESC LIMIT 50;`, (err, result) => {
+  con.query(`SELECT hive_username, SUM(points) AS sum FROM twitter_posts WHERE points_time > 0 GROUP BY hive_username ORDER BY sum DESC LIMIT 50;`, (err, result) => {
     if(err) callback('Server error!')
     else {
       let body = ''
