@@ -31,9 +31,9 @@ search.start()
 scan_stream.scan()
 search_register_tweets.start()
 
-if(process.env.POST_NOW == 'true'){
+//if(process.env.POST_NOW == 'true'){
   daily.post()
-}
+//}
 
 app.get('/', (req, res) => {
   con.query("SELECT hive_username, user_name, SUM(points) AS sum FROM twitter_posts GROUP BY hive_username, user_name ORDER BY sum DESC;", (err, result) => {
