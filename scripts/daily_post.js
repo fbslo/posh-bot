@@ -4,19 +4,15 @@ const hive = require('@hiveio/hive-js')
 
 
 function post(){
-  var one_day = new Date().getTime() - 86400000
-  var now = new Date().getTime()
   con.query(`SELECT hive_username, SUM(points) AS sum FROM twitter_posts WHERE posted IS NULL AND points IS NOT NULL GROUP BY hive_username ORDER BY sum DESC;`, (err, result) => { //points_time <= ${one_day}
     if(err) console.log("Error with database: Error: "+err)
     else {
-      one_day = new Date(one_day) + ''
-      now = new Date(now) + ''
-      submitHivePost(result, one_day, now)
+      submitHivePost(result)
     }
   })
 }
 
-async function submitHivePost(data, one_day, now){
+async function submitHivePost(data){
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -35,7 +31,7 @@ async function submitHivePost(data, one_day, now){
     // });
   } else {
     richlist(async (rich, one_day, now) => {
-      let body = await prepareBody(data, one_day, now)
+      let body = await prepareBody(data)
       body += `\n\n<center><h3>Top 50 earners</h3></center>\n\n|Hive username|Twitter username|Tokens earned|\n|---|---|---|\n`+rich
       hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, body, jsonMetadata, function(err, result) {
         if(err) console.log('Daily post failed! Err: '+err)
@@ -63,7 +59,11 @@ async function submitHivePost(data, one_day, now){
   }
 }
 
-function prepareBody(data, one_day, now){
+function prepareBody(data){
+  var one_day = new Date().getTime() - 86400000
+  var now = new Date().getTime()
+  one_day = new Date(one_day) + ''
+  now = new Date(now) + ''
   let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Tokens earned today|\n|---|---|---|\n`
   for (i in data){
     body += `|@${data[i].hive_username}|${data[i].sum}|\n`
