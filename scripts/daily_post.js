@@ -32,7 +32,7 @@ async function submitHivePost(data){
   } else {
     richlist(async (rich, one_day, now) => {
       let body = await prepareBody(data)
-      body += `\n\n<center><h3>Top 50 earners</h3></center>\n\n|Hive username|Twitter username|Tokens earned|\n|---|---|---|\n`+rich
+      body += `\n\n<center><h3>Top 50 earners</h3></center>\n\n|Hive username|Tokens earned|\n|---|---|---|\n`+rich
       hive.broadcast.comment(config.posting_key, '', 'posh', config.account_name, permlink, 'Daily #POSH stats! '+today, body, jsonMetadata, function(err, result) {
         if(err) console.log('Daily post failed! Err: '+err)
         else {
