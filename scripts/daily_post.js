@@ -64,7 +64,7 @@ function prepareBody(data){
   var now = new Date().getTime()
   one_day = new Date(one_day) + ''
   now = new Date(now) + ''
-  let body = `<center><h3>Total number of tokens distributed today: 1,000</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Tokens earned today|\n|---|---|\n`
+  let body = `<center><h3>Total number of tokens distributed today: 500</h3></center>\nTweets that were created between ${one_day.split('(')[0]} and ${now.split('(')[0]} \n\n|Hive username|Tokens earned today|\n|---|---|\n`
   for (i in data){
     body += `|@${data[i].hive_username}|${data[i].sum}|\n`
     updatePost(data[i].id)
