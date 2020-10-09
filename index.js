@@ -1,7 +1,8 @@
 const express =  require("express");
 require("dotenv").config()
+const schedule = require('node-schedule')
 
-var app = express();
+const app = express();
 const mongo = require("./mongo.js")
 
 mongo.connect()
@@ -14,6 +15,9 @@ async function main(){
   const verifyRegistrationTweet = require("./scripts/verifyRegistrationTweet.js")
   const hiveReply = require("./scripts/hiveBroadcast/hiveReply.js")
   const storeUserToDatabase = require("./scripts/storeUserToDatabase.js")
+  const doesTweetIncludeHiveLink = require("./scripts/doesTWeetIncludeHiveLink.js")
+  const storeTweetToDatabase = require("./scripts/storeTweetToDatabase.js")
+  const calculateEngagementScore = require("./scripts/calculateEngagementScore.js")
 
   console.log("Posh bot is waking up...")
   streamHiveBlockchain.start((registrationData) => {
@@ -33,6 +37,18 @@ async function main(){
     }
     else hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](@acidyo/posh-info-and-faq).`, registrationData)
   })
+
+  streamTwitter.start((tweetData) => {
+    doesTweetIncludeHiveLink.check(tweetData)
+      .then((result) => {
+        if (result == false) console.log(`Tweet by ${tweetData.user.screen_name} does not include Hive link.`)
+        else storeTweetToDatabase.store(tweetData, result).then(result => console.log(`Tweet @${result.user.screen_name}/${result.id_str} stored.`))
+      })
+  })
+
+  schedule.scheduleJob('0 0 * * *', () => {
+    // TODO: calculate tokens
+  }) // run everyday at midnight
 }
 
 function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){

@@ -17,8 +17,8 @@ function start(callback){
            try {
              data.body = data.body.replace(/(\r\n|\n|\r)/gm, ""); // remove line breaks
              let twitterLink = data.body.split(" ")[1]
-             let twitterUsername = twitterLink.split("/")[4] //[ "https:", "", "twitter.com", "username", "tweetId" ]
-             let twitterTweetId = twitterLink.split("/")[5]
+             let twitterUsername = twitterLink.split("/")[3] //[ "https:", "", "twitter.com", "username", "tweetId" ]
+             let twitterTweetId = twitterLink.split("/")[4]
              twitterTweetId.replace(/[^0-9]/g, "") //remove possible ?query from link
              let returnObject = {
                isSuccess: true,
