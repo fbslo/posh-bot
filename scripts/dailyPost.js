@@ -1,5 +1,6 @@
 const mongo = require("../mongo.js")
 const database = mongo.get().db("Posh").collection("tweets")
+const hive = require("@hiveio/hive-js")
 
 /* objectOfData:
 * tokensPerScore [int]
@@ -15,6 +16,30 @@ async function submit(objectOfData){
   body += prepareTable()
   body += `\n\n<center><h3>Top 25 earners</h3></center>\n\n|Hive username|Tokens earned|\n|---|---|\n`
   body += await prepareRichlist()
+  submitToHive(body, title)
+}
+
+function submitToHive(body, title){
+  let permlink = new Date().getTime() + '-posh-bot'
+  let jsonMetadata = { app: 'poshtoken/2.0', author: "fbslo" }
+  hive.broadcast.comment(process.env.PRIVATE_KEY, '', 'poshtoken', process.env.ACCOUNT, permlink, title, body, jsonMetadata, function(err, result) {
+    if (err) console.log(err)
+    else addCommentOptions(permlink)
+  });
+}
+
+function addCommentOptions(permlink){
+  let extensions = [[0, {
+    "beneficiaries": [
+      {
+        "account": "fbslo",
+        "weight": 10000
+      }
+    ]
+  }]]
+  hive.broadcast.commentOptions(process.env.PRIVATE_KEY, process.env.ACCOUNT, permlink, '1000.000 HBD', 10000, true, true, extensions, function(err, result) {
+    if (err) console.log(err)
+  });
 }
 
 function prepareTable(tweetsToday){

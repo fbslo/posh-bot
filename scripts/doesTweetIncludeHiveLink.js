@@ -61,5 +61,6 @@ function includesLink(urls, callback){
       }
     })
   }
+}
 
 module.exports.check = check
