@@ -17,7 +17,7 @@ function store(tweetData, hiveLink){
 
 function findHiveUsernameForTwitterUser(username){
   return new Promise((resolve, reject)  => {
-    mongo.get().db("Posh").collection("users").findOne({twitterUsername: username}, (err, result) => {
+    mongo.get().db("Posh").collection("users").findOne({twitterUsername: username.toLowerCase()}, (err, result) => {
       if (err) reject()
       else {
         if (result == null) resolve("not_found")

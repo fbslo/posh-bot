@@ -68,6 +68,7 @@ async function main(){
 function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
   storeUserToDatabase.isUserAlreadyStored(registrationData.twitterUsername, registrationData.hiveUsername)
     .then((result) => {
+      console.log(result)
       if (result == 'user_not_stored'){
         return storeUserToDatabase.storeUser(registrationData)
       }

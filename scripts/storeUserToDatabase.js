@@ -17,7 +17,7 @@ function storeUser(registrationData){
   return new Promise((resolve, reject) => {
     let { twitterUsername, twitterTweetId, hiveUsername } = registrationData
     let dataObject = {
-      twitterUsername: twitterUsername,
+      twitterUsername: twitterUsername.toLowerCase(),
       twitterTweetId: twitterTweetId,
       hiveUsername: hiveUsername,
       timestamp: new Date().getTime()
