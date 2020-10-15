@@ -15,7 +15,7 @@ async function main(){
   const verifyRegistrationTweet = require("./scripts/verifyRegistrationTweet.js")
   const hiveReply = require("./scripts/hiveBroadcast/hiveReply.js")
   const storeUserToDatabase = require("./scripts/storeUserToDatabase.js")
-  const doesTweetIncludeHiveLink = require("./scripts/doesTWeetIncludeHiveLink.js")
+  const doesTweetIncludeHiveLink = require("./scripts/doesTweetIncludeHiveLink.js")
   const storeTweetToDatabase = require("./scripts/storeTweetToDatabase.js")
   const calculateEngagementScore = require("./scripts/calculateEngagementScore.js")
   const calculateTokens = require("./scripts/calculateTokens.js")
