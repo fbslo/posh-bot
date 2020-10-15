@@ -13,7 +13,6 @@ var T = new Twit({
   strictSSL:            true,     // optional - requires SSL certificates to be valid.
 })
 
-
 function calculate(){
   database.findOne({timestamp: {$gt: new Date().getTime - 86400000}, engagementScore: NULL}, async (err, result) => { //find all tweets older than one day
     if (err) console.log(`Error calculating engagementScore! Database error: ${err}`)
@@ -56,7 +55,10 @@ async function hiveEnagementScoreFunction(hiveLink, hiveUsername){
       if(hiveLink.includes("3speak.co")){
         //https://3speak.co/watch?v= username /permlink?maybe=something
         if(hiveLink.split("=")[1].split("/")[0] == hiveUsername){
-          // TODO: get post data
+          let permlink = hiveLink.split("=")[1].split("/")[1]
+          if (permlink.includes('?')) permlink = permlink.split('?')[0] //remove possible ?maybe=something
+          let hiveEnagementScore = await getHivePostScore(hiveUsername, permlink)
+          resolve(hiveEnagementScore)
         } else {
           resolve(0)
         }

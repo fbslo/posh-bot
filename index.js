@@ -46,8 +46,13 @@ async function main(){
       })
   })
 
+  schedule.scheduleJob('30 * * * *', () => {
+    calculateEngagementScore.calculate()
+  }) // run everyday 30 minutes
+
   schedule.scheduleJob('0 0 * * *', () => {
     // TODO: calculate tokens
+    calculateTokens.calculate()
   }) // run everyday at midnight
 }
 
