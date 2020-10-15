@@ -14,7 +14,7 @@ var T = new Twit({
 })
 
 function calculate(){
-  database.findOne({timestamp: {$gt: new Date().getTime - 86400000}, engagementScore: NULL}, async (err, result) => { //find all tweets older than one day
+  database.findOne({timestamp: {$gt: new Date().getTime - 86400000}, engagementScore: 'NULL'}, async (err, result) => { //find all tweets older than one day
     if (err) console.log(`Error calculating engagementScore! Database error: ${err}`)
     else {
       if (result == null) console.log(`No new tweets to calculate engagementScore for.`)
@@ -125,14 +125,13 @@ async function isValidReplyFunction(author){
 
 function storeTweedEngagement(twitterTweetId, engegementScore){
   database.updateOne({twitterTweetId: twitterTweetId}, {
-    engagementTime: new Date().getTime(),
-    engagementScore: engegementScore
+    $set: {
+      engagementTime: new Date().getTime(),
+      engagementScore: engegementScore
+    }
   }, (err, result) => {
     if (err) console.log(`Error storing engagementScore for tweet ${twitterTweetId}.`)
-    else console.log(`Tweet ${twitterTweetId} stored!`)
+    else console.log(`Tweet ${twitterTweetId} engagementScore updated!`)
   })
 }
-
-calculateEngagementScore({twitterTweetId: '1314583656560832512'})
-
 module.exports.calculate = calculate

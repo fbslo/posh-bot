@@ -11,6 +11,7 @@ var T = new Twit({
 })
 
 function verify(id, hiveUsername){
+  console.log(id, hiveUsername)
   return new Promise((resolve, reject) => {
     T.get('statuses/show/:id', { id: id }, function(err, data, response) {
       if (err) reject(err)

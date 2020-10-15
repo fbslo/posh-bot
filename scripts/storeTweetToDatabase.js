@@ -6,7 +6,7 @@ function store(tweetData, hiveLink){
     findHiveUsernameForTwitterUser(tweetData.user.screen_name)
       .then((result) => {
         if (result != "not_found") return storeTweet(tweetData, result, hiveLink)
-        else console.log(`User ${tweetData.user.screen_name} not registered!`)
+        else resolve('not_found')
       })
       .then((result) => {
         resolve(result)

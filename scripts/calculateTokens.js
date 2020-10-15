@@ -29,8 +29,10 @@ function calculate(){
 
 function updateTweetTokens(twitterTweetId, tokens){
   database.updateOne({twitterTweetId: twitterTweetId}, {
-    tokensTime: new Date().getTime(),
-    tokens: tokens
+    $set: {
+      tokensTime: new Date().getTime(),
+      tokens: tokens
+    }
   }, (err, result) => {
     if (err) console.log(`Error storing engagementScore for tweet ${twitterTweetId}.`)
     else console.log(`Tweet ${twitterTweetId} stored!`)

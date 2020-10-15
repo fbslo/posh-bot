@@ -52,7 +52,7 @@ function prepareTable(tweetsToday){
 
 function prepareRichlist(){
   return new Promise((resolve, reject) => {
-    databse.aggregate({ $match: { tokens: $ne: [NULL] } }, { $group: { hiveUsername: hiveUsername, sum : { $sum: "tokens" } } }, (err, result) => {
+    databse.aggregate({ $match: { tokens: { $ne: [NULL] } } }, { $group: { hiveUsername: hiveUsername, sum : { $sum: "tokens" } } }, (err, result) => {
       if (err) resolve('database_error')
       else {
         if (result != null){

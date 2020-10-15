@@ -18,7 +18,7 @@ function addCommentOptions(permlink){
     ]
   }]]
   hive.broadcast.commentOptions(process.env.PRIVATE_KEY, process.env.ACCOUNT, permlink, '1000.000 HBD', 10000, true, true, extensions, function(err, result) {
-    if (err) console.log(err)
+    if (err) console.log(`Error while setting comment options: ${err}`)
   });
 }
 

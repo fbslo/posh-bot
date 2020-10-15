@@ -10,11 +10,11 @@ var T = new Twit({
 })
 
 
-function stream(callback){
+function start(callback){
   var stream = T.stream('statuses/filter', { track: process.env.HASHTAG })
 
   stream.on('tweet', function (tweet) {
-    console.log(callback(tweet))
+    callback(tweet)
   })
 
   stream.on('error', (err) => {
@@ -28,4 +28,4 @@ function stream(callback){
   })
 }
 
-module.exports.stream = stream
+module.exports.start = start

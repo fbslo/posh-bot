@@ -34,18 +34,23 @@ async function main(){
         })
         .catch((err) => {
           console.log(err)
-          hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](@acidyo/posh-info-and-faq).`, registrationData)
+          hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
         })
     }
-    else hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](@acidyo/posh-info-and-faq).`, registrationData)
+    else hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
   })
 
   streamTwitter.start((tweetData) => {
-    doesTweetIncludeHiveLink.check(tweetData)
-      .then((result) => {
-        if (result == false) console.log(`Tweet by ${tweetData.user.screen_name} does not include Hive link.`)
-        else storeTweetToDatabase.store(tweetData, result).then(result => console.log(`Tweet @${result.user.screen_name}/${result.id_str} stored.`))
-      })
+    if (!tweetData.retweeted_status){ //is not a retweet
+      doesTweetIncludeHiveLink.check(tweetData)
+        .then((result) => {
+          if (result == false) console.log(`Tweet by ${tweetData.user.screen_name} does not include Hive link.`)
+          else storeTweetToDatabase.store(tweetData, result).then((result) => {
+            if (result == 'not_found') console.log(`User @${tweetData.user.screen_name} is not registered!`)
+            else console.log(`Tweet @${tweetData.user.screen_name}/${tweetData.id_str} stored.`)
+          })
+        })
+    }
   })
 
   schedule.scheduleJob('30 * * * *', () => {
@@ -73,6 +78,6 @@ function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
     })
     .catch((err) => {
       console.log(err)
-      hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](@acidyo/posh-info-and-faq).`, registrationData)
+      hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
     })
 }
