@@ -9,7 +9,7 @@ con.query("SELECT * FROM users", (err, result) => {
       users.push({
         twitterUsername: result[i].twitter,
         twitterTweetId: "v1-legacy",
-        hiveUsername: result[i].hive_username,
+        hiveUsername: result[i].hive,
         timestamp: result[i].time
       })
     }

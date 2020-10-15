@@ -3,7 +3,7 @@ const database = mongo.get().db("Posh").collection("users")
 
 function isUserAlreadyStored(twitterUsername, hiveUsername){
   return new Promise((resolve, reject) => {
-    database.findOne({$or: [{twitterUsername: twitterUsername}, {hiveUsername: hiveUsername}]}, (err, result) => {
+    database.findOne({$or: [{twitterUsername: twitterUsername.toLowerCase()}, {hiveUsername: hiveUsername}]}, (err, result) => {
       if (err) reject(err)
       else {
         if (result == null) resolve("user_not_stored")
