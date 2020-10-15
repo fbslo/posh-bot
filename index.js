@@ -18,6 +18,8 @@ async function main(){
   const doesTweetIncludeHiveLink = require("./scripts/doesTWeetIncludeHiveLink.js")
   const storeTweetToDatabase = require("./scripts/storeTweetToDatabase.js")
   const calculateEngagementScore = require("./scripts/calculateEngagementScore.js")
+  const calculateTokens = require("./scripts/calculateTokens.js")
+  const dailyPost = require("./scripts/dailyPost.js")
 
   console.log("Posh bot is waking up...")
   streamHiveBlockchain.start((registrationData) => {
@@ -51,8 +53,10 @@ async function main(){
   }) // run everyday 30 minutes
 
   schedule.scheduleJob('0 0 * * *', () => {
-    // TODO: calculate tokens
     calculateTokens.calculate()
+      .then((result) => {
+        dailyPost.submit(result)
+      })
   }) // run everyday at midnight
 }
 
