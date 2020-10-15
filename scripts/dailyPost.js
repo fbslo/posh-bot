@@ -24,7 +24,7 @@ function submitToHive(body, title){
   let jsonMetadata = { app: 'poshtoken/2.0', author: "fbslo" }
   hive.broadcast.comment(process.env.PRIVATE_KEY, '', 'poshtoken', process.env.ACCOUNT, permlink, title, body, jsonMetadata, function(err, result) {
     if (err) console.log(err)
-    else addCommentOptions(permlink)
+    //else addCommentOptions(permlink)
   });
 }
 

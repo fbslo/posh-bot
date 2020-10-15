@@ -4,7 +4,7 @@ function reply(message, registrationData){
   let permlink = new Date().getTime() + '-posh-bot'
   hive.broadcast.comment(process.env.PRIVATE_KEY, registrationData.hiveUsername, registrationData.hiveCommentPermlink, process.env.ACCOUNT, permlink, '', message, '', function(err, result) {
     if (err) console.log(err)
-    else addCommentOptions(permlink)
+    //else addCommentOptions(permlink)
   });
 }
 
