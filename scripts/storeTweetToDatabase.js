@@ -36,10 +36,10 @@ function storeTweet(tweetData, hiveUsername, hiveLink){
       hiveLink: hiveLink,
       timestamp: new Date().getTime(),
       created: tweetData.created_at,
-      engagementScore: NULL,
-      engagementTime: NULL,
-      tokens: NULL,
-      tokensTime: NULL
+      engagementScore: 'NULL',
+      engagementTime: 'NULL',
+      tokens: 'NULL',
+      tokensTime: 'NULL'
     }, (err, result) => {
       if (err) reject()
       else resolve(tweetData)
