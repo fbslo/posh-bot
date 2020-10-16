@@ -75,7 +75,8 @@ function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
       else console.log(`User ${registrationData.hiveUsername} already stored!`)
     })
     .then((result) => {
-      hiveReply.reply(`@${registrationData.hiveUsername}, your were connected to twitter username ${registrationData.twitterUsername}!`, registrationData)
+      //user not registered already
+      if (result != undefined) hiveReply.reply(`@${registrationData.hiveUsername}, your were connected to twitter username ${registrationData.twitterUsername}!`, registrationData)
     })
     .catch((err) => {
       console.log(err)
