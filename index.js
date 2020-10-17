@@ -24,29 +24,36 @@ async function main(){
   console.log("Posh bot is waking up...")
   streamHiveBlockchain.start((registrationData) => {
     if (registrationData.isSuccess == true) {
-      verifyRegistrationTweet.verify(registrationData.twitterTweetId, registrationData.hiveUsername)
+      storeUserToDatabase.isUserAlreadyStored(registrationData.twitterUsername, registrationData.hiveUsername)
         .then((result) => {
-          if (result != false){
-            storeUserToDB(storeUserToDatabase, hiveReply, registrationData)
-          } else {
-            hiveReply.reply(`@${registrationData.hiveUsername}, your Tweet doesen't seems to be in correct format!`, registrationData)
+          if (result != 'user_not_stored') return;
+          else {
+            //verify registration tweet and store user
+            verifyRegistrationTweet.verify(registrationData.twitterTweetId, registrationData.hiveUsername)
+              .then((result) => {
+                if (result != false){
+                  storeUserToDB(storeUserToDatabase, hiveReply, registrationData)
+                } else {
+                  //hiveReply.reply(`@${registrationData.hiveUsername}, your Tweet doesen't seems to be in the correct format!`, registrationData)
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+                //hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request. Please try again later.`, registrationData)
+              })
           }
         })
-        .catch((err) => {
-          console.log(err)
-          hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
-        })
     }
-    else hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
+    else hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request. Please try again later.`, registrationData)
   })
 
   streamTwitter.start((tweetData) => {
     if (!tweetData.retweeted_status){ //is not a retweet
       doesTweetIncludeHiveLink.check(tweetData)
         .then((result) => {
-          if (result == false) console.log(`Tweet by ${tweetData.user.screen_name} does not include Hive link.`)
+          if (result == false) return; //console.log(`Tweet by ${tweetData.user.screen_name} does not include Hive link.`)
           else storeTweetToDatabase.store(tweetData, result).then((result) => {
-            if (result == 'not_found') console.log(`User @${tweetData.user.screen_name} is not registered!`)
+            if (result == 'not_found') return; //console.log(`User @${tweetData.user.screen_name} is not registered!`)
             else console.log(`Tweet @${tweetData.user.screen_name}/${tweetData.id_str} stored.`)
           })
         })
@@ -66,19 +73,13 @@ async function main(){
 }
 
 function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
-  storeUserToDatabase.isUserAlreadyStored(registrationData.twitterUsername, registrationData.hiveUsername)
-    .then((result) => {
-      if (result == 'user_not_stored'){
-        return storeUserToDatabase.storeUser(registrationData)
-      }
-      else console.log(`User ${registrationData.hiveUsername} already stored!`)
-    })
+  storeUserToDatabase.storeUser(registrationData)
     .then((result) => {
       //user not registered already
       if (result != undefined) hiveReply.reply(`@${registrationData.hiveUsername}, your were connected to twitter username ${registrationData.twitterUsername}!`, registrationData)
     })
     .catch((err) => {
       console.log(err)
-      hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.<br>Are you sure your registration comment and tweet are in the correct format?<br>If you need more info, please read this post: [Info and FAQ](/@acidyo/posh-info-and-faq).`, registrationData)
+      //hiveReply.reply(`@${registrationData.hiveUsername}, there was an error while processing your request.`, registrationData)
     })
 }

@@ -17,7 +17,7 @@ function verify(id, hiveUsername){
       if (err) reject(err)
       else {
         try {
-          //register-hive-username-hive-username
+          //register-hive-account-hive-username
           let text = data.text
           let array = data.text.split("-")
           let firstPart = array.slice(0, 3).join("-")

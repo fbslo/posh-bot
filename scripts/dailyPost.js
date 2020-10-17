@@ -16,6 +16,7 @@ async function submit(objectOfData){
   body += prepareTable()
   body += `\n\n<center><h3>Top 25 earners</h3></center>\n\n|Hive username|Tokens earned|\n|---|---|\n`
   body += await prepareRichlist()
+  body += `\n\nThis project is supported by witness [@ocd-witness](https://hivesigner.com/sign/account-witness-vote?witness=ocd-witness&approve=1) and developed by witness [@fbslo](https://hivesigner.com/sign/account-witness-vote?witness=fbslo&approve=1).`
   submitToHive(body, title)
 }
 
