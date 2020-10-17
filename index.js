@@ -70,11 +70,19 @@ async function main(){
         dailyPost.submit(result)
       })
   }) // run everyday at midnight
+
+  app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/frontend/index.html');
+  });
+  app.use("/twitter", require("./api/getTwitterAccount.js"))
+  app.use("/richList",  require('./api/richList.js'))
+  app.listen(8080)
 }
 
 function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
   storeUserToDatabase.storeUser(registrationData)
     .then((result) => {
+      console.log(result)
       //user not registered already
       if (result != undefined) hiveReply.reply(`@${registrationData.hiveUsername}, your were connected to twitter username ${registrationData.twitterUsername}!`, registrationData)
     })

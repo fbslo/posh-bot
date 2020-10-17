@@ -30,7 +30,9 @@ function start(callback){
            } catch (e) {
              let returnObject = {
                isSuccess: false,
-               error: e
+               error: e,
+               hiveUsername: data.author,
+               hiveCommentPermlink: data.permlink
              }
              callback(returnObject)
            }

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hiveio/hive-js/dist/hive.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>PoshToken</title>
+  </head>
+  <body>
+    <div class="container mt-3">
+      <h3>Register your Twitter account</h3>
+      <span id='errors'></span>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">@</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Hive username" id="hive_username" name="hive_username">
+      </div>
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">@</span>
+        </div>
+        <input type="text" class="form-control" placeholder="Twitter username" id="twitter_username" name="twitter_username">
+      </div>
+      <button onclick='start()' class="btn btn-primary">Submit</button>
+      <span id='twitter_button'></span>
+      <span id='confirm_twitter_button'></span>
+      <span id='tweets'></span>
+    </div>
+
+    <script>
+    function start(){
+      hive.api.getAccounts([document.getElementById("hive_username").value.toLowerCase()], function(err, response){
+          if (err) document.getElementById("errors").innerHTML = `Error: ${err}<p>`
+          else if (response.length == 0) document.getElementById("errors").innerHTML = `Error: Account ${document.getElementById("hive_username").value} does not exist.<p>`
+          else verifyTwitterUsername()
+      });
+    }
+
+    function verifyTwitterUsername(){
+      if (document.getElementById("twitter_username").value.length == 0) document.getElementById("errors").innerHTML = `Error: Please enter Twitter username<p>`
+      $.ajax({
+        url: "/twitter/"+document.getElementById("twitter_username").value,
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+          if (res.error) document.getElementById("errors").innerHTML = `Error: ${res.error}<p>`
+          else submitTweet()
+        },
+        error: function(err){
+          console.log(err)
+        }
+      });
+    }
+
+    function submitTweet(){
+      let hive = document.getElementById("hive_username").value.toLowerCase()
+      let twitter = document.getElementById("twitter_username").value
+      let message = `register-hive-account-${hive}`
+      let link = `https://twitter.com/intent/tweet?text=${message}`
+      document.getElementById("twitter_button").innerHTML = '<button onclick="redirect(`'+link+'`)" class="btn btn-primary">Tweet the confirmation</button>'
+    }
+
+    function redirect(redirect){
+      window.open(redirect, '_blank');
+      document.getElementById("confirm_twitter_button").innerHTML = '<button onclick="getTweets()" class="btn btn-primary">I tweeted the confirmation</button>'
+    }
+
+    function getTweets(){
+      if (document.getElementById("twitter_username").value.length == 0) document.getElementById("errors").innerHTML = `Error: Please enter Twitter username<p>`
+      $.ajax({
+        url: "/twitter/getTimeline/"+document.getElementById("twitter_username").value,
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+          if (res.error) document.getElementById("errors").innerHTML = `Error: ${res.error}<p>`
+          else {
+            let tweets = ''
+            for (i in res.response){
+              tweets += `<li class="list-group-item">${res.response[i].text} <button class="btn btn-primary" onclick="submitHiveComment('${res.response[i].id_str}')">Select</button></li>`
+            }
+            document.getElementById("tweets").innerHTML = `<p>Select confirmation tweet:<br><ul class="list-group">${tweets}</ul>`
+          }
+        },
+        error: function(err){
+          console.log(err)
+        }
+      });
+    }
+
+    function submitHiveComment(id){
+      let user = document.getElementById("twitter_username").value
+      let permlink = 'register-'+new Date().getTime()
+      let json_metadata = JSON.stringify({app: 'poshApp', developer: "fbslo"})
+      // if (window.hive_keychain){
+      //   hive_keychain.requestPost('', 'no title', `register https://twitter/${user}/status/${id}`, 'tmvu92sx2j2xhy2', 'poshtoken', json_metadata, permlink, function(response) {
+      //   	console.log(response);
+      //   });
+      // }
+      // else {
+        let link = `https://hivesigner.com/sign/comment?parent_author=poshtoken&parent_permlink=tmvu92sx2j2xhy2&permlink=${permlink}&body=register https://twitter/${user}/status/${id}&title=title&json_metadata=${json_metadata}`
+        window.open(link, '_blank');
+      // }
+    }
+    </script>
+  </body>
+</html>

@@ -52,18 +52,22 @@ function prepareTable(tweetsToday){
 }
 
 function prepareRichlist(){
-  return new Promise((resolve, reject) => {
-    databse.aggregate({ $match: { tokens: { $ne: [NULL] } } }, { $group: { hiveUsername: hiveUsername, sum : { $sum: "tokens" } } }, (err, result) => {
-      if (err) resolve('database_error')
-      else {
-        if (result != null){
-          for (i in result){
-            body += `|@${result[i].hiveUsername}|${result[i].sum}|\n`
-          }
-          resolve(body)
-        }
+  return new Promise(async (resolve, reject) => {
+    let result  = await database.aggregate([
+      // Group by the grouping key, but keep the valid values
+      { "$group": {
+          "_id": "$hiveUsername",
+          "tokens": { $sum: "$tokens" },
+      }},
+      { "$sort": { "tokens": -1 } }
+    ]).toArray()
+    result = result.slice(0, 25)
+    if (result != null){
+      for (i in result){
+        body += `|@${result[i]._id}|${result[i].tokens}|\n`
       }
-    })
+      resolve(body)
+    }
   })
 }
 
