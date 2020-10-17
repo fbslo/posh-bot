@@ -8,6 +8,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@hiveio/hive-js/dist/hive.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
     <title>PoshToken</title>
   </head>
   <body>
@@ -31,6 +32,7 @@
       <span id='twitter_button'></span>
       <span id='confirm_twitter_button'></span>
       <span id='tweets'></span>
+      <span id='websocket_new_users'></span>
     </div>
 
     <script>
@@ -107,6 +109,13 @@
         window.open(link, '_blank');
       // }
     }
+
+    $(function () {
+      var socket = io();
+      socket.on('user', function(msg){
+        document.getElementById("websocket_new_users").innerHTML += `<p>New user registered: ${msg.hiveUsername} & ${msg.twitterUsername}`
+      });
+    });
     </script>
   </body>
 </html>

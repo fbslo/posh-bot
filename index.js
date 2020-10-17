@@ -1,8 +1,11 @@
 const express =  require("express");
 require("dotenv").config()
 const schedule = require('node-schedule')
+var http = require('http');
 
 const app = express();
+var server = http.createServer(app);
+var io = require('socket.io')(server);
 const mongo = require("./mongo.js")
 
 mongo.connect()
@@ -79,15 +82,17 @@ async function main(){
   });
   app.use("/twitter", require("./api/getTwitterAccount.js"))
   app.use("/richList",  require('./api/richList.js'))
-  app.listen(8080)
+  app.use("/all_users",  require('./api/users.js'))
+  server.listen(8080)
 }
 
 function storeUserToDB(storeUserToDatabase, hiveReply, registrationData){
   storeUserToDatabase.storeUser(registrationData)
     .then((result) => {
-      console.log(result)
       //user not registered already
       if (result != undefined) hiveReply.reply(`@${registrationData.hiveUsername}, your were connected to twitter username ${registrationData.twitterUsername}!`, registrationData)
+      //emit event to frontend
+      io.emit('user', {hiveUsername: registrationData.hiveUsername, twitterUsername: registrationData.twitterUsername});
     })
     .catch((err) => {
       console.log(err)
