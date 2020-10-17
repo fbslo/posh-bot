@@ -74,6 +74,9 @@ async function main(){
   app.get('/', (req, res) => {
     res.sendFile(__dirname + '/frontend/index.html');
   });
+  app.get('/users', (req, res) => {
+    res.sendFile(__dirname + '/frontend/users.html');
+  });
   app.use("/twitter", require("./api/getTwitterAccount.js"))
   app.use("/richList",  require('./api/richList.js'))
   app.listen(8080)

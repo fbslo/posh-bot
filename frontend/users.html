@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hiveio/hive-js/dist/hive.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>PoshToken</title>
+  </head>
+  <body>
+    <div class="container mt-3">
+      <span id='errors'></span>
+      <div id='list'></div>
+    </div>
+
+    <script>
+    function getList(){
+      $.ajax({
+        url: "/richList",
+        type: 'GET',
+        dataType: 'json', // added data type
+        success: function(res) {
+          console.log(res)
+          if (res.error) document.getElementById("errors").innerHTML = `Error: ${res.error}<p>`
+          else {
+            let list = ''
+            for (i in res.result){
+              list += `<tr><td>${res.result[i].hiveUsername}</td><td>${res.result[i].tokens}</td></tr>`
+            }
+            console.log(list)
+            document.getElementById("list").innerHTML = `<table class="table">
+              <thead>
+                <tr>
+                  <th>Hive username</th>
+                  <th>Tokens</th>
+                </tr>
+              </thead><tbody>${list}</tbody></table>`
+          }
+        },
+        error: function(err){
+          console.log(err)
+        }
+      });
+    }
+    getList()
+    </script>
+  </body>
+</html>
