@@ -1,5 +1,7 @@
 ## Posh Bot
 
+# Use updated version: https://github.com/fbslo/posh-bot-2
+
 ---
 
 Created by @fbslo
