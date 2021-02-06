@@ -69,7 +69,7 @@ function includesLink(urls, callback){
       if(error) console.log("Error fetching url: "+error)
       else {
         if (response.statusCode >= 300 && response.statusCode < 400) {
-          if(response.headers.location.includes("peakd") || response.headers.location.includes("hive.blog") || response.headers.location.includes("3speak.online") || response.headers.location.includes("leofinance.io")){
+          if(response.headers.location.includes("ecency") || response.headers.location.includes("peakd") || response.headers.location.includes("hive.blog") || response.headers.location.includes("3speak.online") || response.headers.location.includes("leofinance.io")){
             isValidLink.push(response.headers.location)
           }
           if(i < urls.length-1){
